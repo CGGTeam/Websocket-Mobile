@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">École de karaté</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="combat">Combat</string>
+    <string name="examen">Examen</string>
+    <string name="anciennete">Anciennete</string>
+    <string name="communication">Communication</string>
+    <string name="accueil">Accueil</string>
+    <string name="messagerie">Messagerie</string>
+    <string name="text_combat">Page de combat!</string>
+    <string name="text_messagerie">Page de messagerie!</string>
+    <string name="text_examen">Page d\'examen!</string>
+    <string name="text_anciennte">Page d\'ancienneté</string>
+    <string name="text_Connection">Connection</string>
+    <string name="btn_text_connection">connexion</string>
+    <string name="test_etat_connection">État de la connection</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_accueil"
+            android:icon="@drawable/ic_menu_accueil"
+            android:title="@string/accueil" />
+        <item
+            android:id="@+id/nav_combat"
+            android:icon="@drawable/ic_menu_combat"
+            android:title="@string/combat" />
+        <item
+            android:id="@+id/nav_examen"
+            android:icon="@drawable/ic_menu_examen"
+            android:title="@string/examen" />
+        <item
+            android:id="@+id/nav_anciennete"
+            android:icon="@drawable/ic_menu_anciennete"
+            android:title="@string/anciennete" />
+        <item
+            android:id="@+id/nav_messagerie"
+            android:icon="@drawable/ic_menu_messagerie"
+            android:title="@string/messagerie" />
+    </group>
+
+
+</menu>
