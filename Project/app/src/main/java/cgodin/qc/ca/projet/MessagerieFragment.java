@@ -28,11 +28,9 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_messagerie,container, false);
-        Button btnMessagePublic = (Button) view.findViewById(R.id.btnMessagePublic);
-        btnMessagePublic.setOnClickListener(this);
 
-        Button btnMessagePrive = (Button) view.findViewById(R.id.btnMessagePrive);
-        btnMessagePrive.setOnClickListener(this);
+        ((Button) view.findViewById(R.id.btnMessagePublic)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.btnMessagePrive)).setOnClickListener(this);
 
         return view;
     }

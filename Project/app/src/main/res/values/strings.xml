@@ -27,4 +27,7 @@
     <string name="button_messagePrive" >Message Privé</string>
     <string name="text_dernierMessagePublic">dernier message public</string>
     <string name="text_dernierMessagePrive">dernier message privé</string>
+    <string name="button_examenReeussi">Examen réeussi</string>
+    <string name="button_examenEchec">examen échec</string>
+    <string name="text_etat_examen">État de l\'examen</string>
 </resources>
