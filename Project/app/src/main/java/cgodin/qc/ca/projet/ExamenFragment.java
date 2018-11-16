@@ -14,12 +14,7 @@ public class ExamenFragment extends Fragment {
     public ExamenFragment() {
         // Required empty public constructor
     }
-    public static CombatFragment newInstance(String param1, String param2) {
-        CombatFragment fragment = new CombatFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

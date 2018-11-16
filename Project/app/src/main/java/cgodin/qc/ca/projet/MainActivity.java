@@ -77,27 +77,36 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment;
+        int titre;
         switch(id) {
             case R.id.nav_accueil:
                 fragment = new AccueilFragment();
+                titre = R.string.text_Connexion;
                 break;
             case R.id.nav_combat:
                 fragment = new CombatFragment();
+                titre = R.string.combat;
                 break;
             case R.id.nav_examen:
                 fragment = new ExamenFragment();
+                titre = R.string.examen;
                 break;
             case R.id.nav_anciennete:
                 fragment = new AncienneteFragment();
+                titre = R.string.anciennete;
                 break;
             case R.id.nav_messagerie:
                 fragment = new MessagerieFragment();
+                titre = R.string.messagerie;
                 break;
             default:
                 fragment = new AccueilFragment();
+                titre = R.string.text_Connexion;
                 break;
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment, "ACCEUIL").commit();
+        setTitle(titre);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment, getString(titre)).commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

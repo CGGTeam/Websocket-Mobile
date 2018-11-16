@@ -16,10 +16,15 @@
     <string name="text_messagerie">Page de messagerie!</string>
     <string name="text_examen">Page d\'examen!</string>
     <string name="text_anciennte">Page d\'ancienneté</string>
-    <string name="text_Connection">Connection</string>
-    <string name="btn_text_connection">connexion</string>
-    <string name="test_etat_connection">État de la connection</string>
+    <string name="text_Connexion">Connexion</string>
+    <string name="btn_text_connexion">connexion</string>
+    <string name="test_etat_connexion">État de la connexion</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text__messagerie">Messagerie</string>
+    <string name="button_messagePublic" >Message Public</string>
+    <string name="button_messagePrive" >Message Privé</string>
+    <string name="text_dernierMessagePublic">dernier message public</string>
+    <string name="text_dernierMessagePrive">dernier message privé</string>
 </resources>
