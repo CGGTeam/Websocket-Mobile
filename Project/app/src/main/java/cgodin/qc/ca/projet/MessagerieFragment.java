@@ -52,9 +52,11 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
         switch (v.getId()){
             case R.id.btnMessagePublic :
                 Toast.makeText(v.getContext(), "message public",   Toast.LENGTH_LONG).show();
+                // TODO : implémenter l'envoie de message public
                 break;
             case R.id.btnMessagePrive :
                 Toast.makeText(v.getContext(), "message privé",   Toast.LENGTH_LONG).show();
+                // TODO : implémenter l'envoie de message privé
                 break;
         }
 

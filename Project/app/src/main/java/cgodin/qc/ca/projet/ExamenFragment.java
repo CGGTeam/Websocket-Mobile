@@ -48,9 +48,11 @@ public class ExamenFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.btnExamenReeussi :
                 Toast.makeText(v.getContext(), "Examen réeussi",   Toast.LENGTH_LONG).show();
+                // TODO : implémenter le passage d'examen
                 break;
             case R.id.btnExamenEchec :
                 Toast.makeText(v.getContext(), "Examen échec",   Toast.LENGTH_LONG).show();
+                // TODO : implémenter l'échec d'examen
                 break;
         }
 
