@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 
 public class AncienneteFragment extends Fragment implements View.OnClickListener {
+    View view;
     public AncienneteFragment() {
         // Required empty public constructor
     }
@@ -25,8 +26,8 @@ public class AncienneteFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_anciennete,container, false);
-
-        ((Button) view.findViewById(R.id.btnAnciennete)).setOnClickListener(this);
+        this.view=view;
+        (view.findViewById(R.id.btnAnciennete)).setOnClickListener(this);
 
         return view;
     }
@@ -46,10 +47,16 @@ public class AncienneteFragment extends Fragment implements View.OnClickListener
 
         switch (v.getId()){
             case R.id.btnAnciennete :
-                Toast.makeText(v.getContext(), "Anciennete",   Toast.LENGTH_LONG).show();
-                // TODO : implémenter la changement de role (NOUVEAU->ANCIEN)
+                promotion();
                 break;
         }
 
+    }
+
+    /**
+     * Permet d'augmenter le role du compte courant
+     */
+    private void promotion(){
+        // TODO : implémenter la changement de role (NOUVEAU->ANCIEN)
     }
 }

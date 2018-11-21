@@ -10,8 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -19,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     ConstraintLayout constraintLayout;
     NavigationView navigationView;
+    View header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +32,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //le main layout ou les fragments sont inflate
         constraintLayout = (ConstraintLayout) findViewById(R.id.main_container);
 
+        //le layout du drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -37,6 +44,16 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //le header ou les infos du compte sont affichés
+        header=navigationView.getHeaderView(0);
+
+        /*
+        //affiche le fragment de connexion
+        navigationView.getMenu().getItem(0).setChecked(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, new AccueilFragment(), getString(R.string.text_Connexion)).commit();
+        setTitle(R.string.text_Connexion);
+        */
     }
 
     @Override
@@ -71,7 +88,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -112,4 +128,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Permet d'afficher les infos du coimpte dans le header du drawer
+     * @param email
+     * @param alias
+     * @return si erreur
+     */
+    public boolean connexion(String email, String alias, String ceinture, String role, String img){
+        ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
+        ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
+        ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, ceinture,role));
+
+        return true;
+    }
 }

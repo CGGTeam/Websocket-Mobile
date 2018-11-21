@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 
 public class MessagerieFragment extends Fragment implements View.OnClickListener {
-
+    View view;
     public MessagerieFragment() {
         // Required empty public constructor
     }
@@ -28,9 +28,9 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_messagerie,container, false);
-
-        ((Button) view.findViewById(R.id.btnMessagePublic)).setOnClickListener(this);
-        ((Button) view.findViewById(R.id.btnMessagePrive)).setOnClickListener(this);
+        this.view=view;
+        (view.findViewById(R.id.btnMessagePublic)).setOnClickListener(this);
+        (view.findViewById(R.id.btnMessagePrive)).setOnClickListener(this);
 
         return view;
     }
@@ -51,14 +51,25 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
 
         switch (v.getId()){
             case R.id.btnMessagePublic :
-                Toast.makeText(v.getContext(), "message public",   Toast.LENGTH_LONG).show();
-                // TODO : implémenter l'envoie de message public
+                envoyerMessagePublic();
                 break;
             case R.id.btnMessagePrive :
-                Toast.makeText(v.getContext(), "message privé",   Toast.LENGTH_LONG).show();
-                // TODO : implémenter l'envoie de message privé
+                envoyerMessagePrive();
                 break;
         }
+    }
 
+    /**
+     * Permet l'envoie de message public
+     */
+    private void envoyerMessagePublic(){
+        // TODO : implémenter l'envoie de message public
+    }
+
+    /**
+     * Permet l'envoie de message privé
+     */
+    private void envoyerMessagePrive(){
+        // TODO : implémenter l'envoie de message privé
     }
 }

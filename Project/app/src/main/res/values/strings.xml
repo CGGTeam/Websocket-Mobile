@@ -34,4 +34,23 @@
 
     <string name="button_anciennete">Anciennete</string>
     <string name="text_etat_anciennte">État de l\'anciennete</string>
+
+    <string name="ceinture">Ceinture : %1$s , Role : %2$s</string>
+    <string name="ceinture_Anonyme"> </string>
+    <string name="email_Anonyme" />
+    <string name="alias_Anonyme">Anonyme</string>
+    <string name="ailleurs">ailleurs</string>
+    <string name="spectateur">spectateur</string>
+    <string name="attente">attente</string>
+    <string name="list_Ailleurs">Liste ailleurs :</string>
+    <string name="liste_Spectateur">Liste spectateur :</string>
+    <string name="liste_Attente">Liste attente :</string>
+    <string name="etre_arbitre">Je veux être arbitre</string>
+    <string name="liste_Arbitre">Liste arbitre :</string>
+    <string name="button_gagner">Gagner</string>
+    <string name="button_perdre">Perdre</string>
+    <string name="button_nul">Nul</string>
+    <string name="button_arbittre_sansFautes" >Abritre sans fautes</string>
+    <string name="button_arbittre_avecFautes">Arbitre avec fautes</string>
+
 </resources>

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 
 public class ExamenFragment extends Fragment implements View.OnClickListener{
+    View view;
     public ExamenFragment() {
         // Required empty public constructor
     }
@@ -25,9 +26,9 @@ public class ExamenFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_examen,container, false);
-
-        ((Button) view.findViewById(R.id.btnExamenReeussi)).setOnClickListener(this);
-        ((Button) view.findViewById(R.id.btnExamenEchec)).setOnClickListener(this);
+        this.view=view;
+        (view.findViewById(R.id.btnExamenReeussi)).setOnClickListener(this);
+        (view.findViewById(R.id.btnExamenEchec)).setOnClickListener(this);
 
         return view;
     }
@@ -47,14 +48,26 @@ public class ExamenFragment extends Fragment implements View.OnClickListener{
 
         switch (v.getId()){
             case R.id.btnExamenReeussi :
-                Toast.makeText(v.getContext(), "Examen réeussi",   Toast.LENGTH_LONG).show();
-                // TODO : implémenter le passage d'examen
+                passerExamen();
                 break;
             case R.id.btnExamenEchec :
-                Toast.makeText(v.getContext(), "Examen échec",   Toast.LENGTH_LONG).show();
-                // TODO : implémenter l'échec d'examen
+                echouerExamen();
                 break;
         }
 
+    }
+
+    /**
+     * Permet le passage d'un examen avec le compte courant
+     */
+    private void passerExamen(){
+        // TODO : implémenter le passage d'examen
+    }
+
+    /**
+     * Permet l'échec d'un examen avec le compte courant
+     */
+    private void echouerExamen(){
+        // TODO : implémenter l'échec d'examen
     }
 }

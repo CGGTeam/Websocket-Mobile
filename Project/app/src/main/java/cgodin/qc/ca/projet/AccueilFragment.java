@@ -12,8 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Base64;
+
 
 public class AccueilFragment extends Fragment implements View.OnClickListener {
+    View view;
     public AccueilFragment() {
         // Required empty public constructor
     }
@@ -27,8 +30,9 @@ public class AccueilFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accueil,container, false);
+        this.view=view;
 
-        ((Button) view.findViewById(R.id.btnConnexion)).setOnClickListener(this);
+        (view.findViewById(R.id.btnConnexion)).setOnClickListener(this);
 
         return view;
     }
@@ -47,11 +51,26 @@ public class AccueilFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getId()){
             case R.id.btnConnexion :
-                Toast.makeText(v.getContext(), "Connexion",   Toast.LENGTH_LONG).show();
-                // TODO : implémenter la connexion
-                
+                tentativeConnexion();
                 break;
         }
 
+    }
+
+    /**
+     * Permet la tentative de connexion
+     */
+    private void tentativeConnexion(){
+        Toast.makeText(view.getContext(), "Connexion",   Toast.LENGTH_LONG).show();
+        // TODO : implémenter la connexion
+
+        String email = "test@test.ca";
+        String alias = "Test";
+        String ceinture = "Rouge";
+        String role = "Sensei";
+        String img = "";
+
+        //Pour afficher les information du compte dans le header du drawer
+        ((MainActivity)getActivity()).connexion(email, alias, ceinture, role, img);
     }
 }
