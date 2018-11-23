@@ -25,6 +25,11 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     View header;
 
+    //StompSession stomp = new StompSession();
+    Login login = new Login();
+
+    public static String SESSIONREST = new String();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,12 +134,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Permet d'afficher les infos du coimpte dans le header du drawer
+     * Permet de se connecter
      * @param email
      * @param alias
      * @return si erreur
      */
-    public boolean connexion(String email, String alias, String ceinture, String role, String img){
+    public boolean connexion(String email, String password, String alias, String ceinture, String role, String img){
+
+        login.etablirConnexion(getString(R.string.path), email, password);
+
+
+
         ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
         ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
         ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, ceinture,role));

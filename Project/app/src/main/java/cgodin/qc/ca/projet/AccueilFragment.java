@@ -64,13 +64,14 @@ public class AccueilFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(view.getContext(), "Connexion",   Toast.LENGTH_LONG).show();
         // TODO : implémenter la connexion
 
-        String email = "test@test.ca";
+        String email = "v1@dojo";
+        String password = "Patate123";
         String alias = "Test";
         String ceinture = "Rouge";
         String role = "Sensei";
         String img = "";
 
         //Pour afficher les information du compte dans le header du drawer
-        ((MainActivity)getActivity()).connexion(email, alias, ceinture, role, img);
+        ((MainActivity)getActivity()).connexion(email, password, alias, ceinture, role, img);
     }
 }
