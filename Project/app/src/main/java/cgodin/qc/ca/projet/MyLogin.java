@@ -30,6 +30,7 @@ public class MyLogin {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("error", "ERROR : "+error);
+                activity.afficherErreurConnexion(error.toString());
             }
 
         }) {
