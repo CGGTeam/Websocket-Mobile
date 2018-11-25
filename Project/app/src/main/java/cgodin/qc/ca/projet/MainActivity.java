@@ -202,9 +202,13 @@ public class MainActivity extends AppCompatActivity
      */
     public boolean connexion(String email, String password){
 
-        final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
-        myLogin.etablirConnexion(MyRequestQueue,email,password, this);
+        final RequestQueue RequestQueue = Volley.newRequestQueue(this);
+        myLogin.etablirConnexion(RequestQueue,email,password, this);
         return true;
+    }
+    public void reconnexion(){
+        final RequestQueue RequestQueue = Volley.newRequestQueue(this);
+        myLogin.etablirConnexion(RequestQueue,email,"Patate123", this);
     }
 
     public void afficherInformationCompte(){

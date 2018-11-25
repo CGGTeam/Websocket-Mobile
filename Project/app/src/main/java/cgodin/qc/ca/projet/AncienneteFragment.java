@@ -66,6 +66,6 @@ public class AncienneteFragment extends Fragment implements View.OnClickListener
         new RequeteAnciennete(this).execute(strUrl);
     }
     public void postExecuted(){
-        ((MainActivity)getActivity()).afficherInformationCompte();
+        ((MainActivity)getActivity()).reconnexion();
     }
 }

@@ -2,6 +2,7 @@ package cgodin.qc.ca.projet.asynctasks;
 
 import android.app.Fragment;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.IOException;
@@ -60,7 +61,11 @@ public class RequeteAnciennete extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String feed) {
-        Log.d("onPostExecute", " onPostExecute =" + feed);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         fragment.postExecuted();
     }
 }
