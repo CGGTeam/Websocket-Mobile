@@ -41,9 +41,17 @@ import cgodin.qc.ca.projet.models.Compte;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import cgodin.qc.ca.projet.stomp.StompTopic;
+import io.reactivex.disposables.Disposable;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+
+import io.reactivex.Observable;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String STOMP_URL = "ws://424v.cgodin.qc.ca:8082/webSocket/websocket"; // <= Pas une erreur
+    private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
     DrawerLayout drawer;
     ConstraintLayout constraintLayout;
@@ -51,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     View header;
 
     MyLogin myLogin = new MyLogin();
-    //MyStomp myStomp = new MyStomp();
+    StompClient stompClient = Stomp.over(PROVIDER, STOMP_URL);
 
     public static String SESSIONREST = new String();
 
@@ -84,6 +92,23 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, new AccueilFragment(), getString(R.string.text_Connexion)).commit();
         setTitle(R.string.text_Connexion);
         */
+
+        stompClient.lifecycle()
+                    .subscribe(lsEvent -> {
+                        switch (lsEvent.getType()) {
+                            case OPENED:
+                                Log.d("STOMP", "Stomp connection opened");
+                                break;
+                            case ERROR:
+                                Log.d("STOMP", "Error", lsEvent.getException());
+                                break;
+                            case CLOSED:
+                                Log.d("STOMP", "Stomp connection closed");
+                                break;
+                        }
+                    });
+
+        stompClient.connect();
 
         final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
     }
@@ -145,6 +170,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_messagerie:
                 fragment = new MessagerieFragment();
+                ((MessagerieFragment)fragment).setStompClient(stompClient);
                 titre = R.string.messagerie;
                 break;
             default:
@@ -162,6 +188,8 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Permet de se connecter
+     * @param email
+     * @param password
      * @return si erreur
      */
     public boolean connexion(String email, String password){
@@ -206,5 +234,9 @@ public class MainActivity extends AppCompatActivity
 
         Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
         ((ImageView)header.findViewById(R.id.imgHeaderAccount)).setImageBitmap(bitmap);
+    }
+
+    public StompClient getStompClient() {
+        return stompClient;
     }
 }
