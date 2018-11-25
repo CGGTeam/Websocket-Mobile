@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="compte_arrays">
-        <item>v1@dojo</item>
-
-        <item>s1@dojo</item>
-        <item>s2@dojo</item>
-
-        <item>a1@dojo</item>
-        <item>a2@dojo</item>
-        <item>a3@dojo</item>
-
-        <item>n1@dojo</item>
-        <item>n2@dojo</item>
-        <item>n3@dojo</item>
-        <item>n4@dojo</item>
-        <item>n5@dojo</item>
-        <item>n6@dojo</item>
-        <item>n7@dojo</item>
-        <item>n8@dojo</item>
-        <item>n9@dojo</item>
-        <item>n10@dojo</item>
-        <item>n11@dojo</item>
-        <item>n12@dojo</item>
-        <item>n13@dojo</item>
-        <item>n14@dojo</item>
-        <item>n15@dojo</item>
-        <item>n16@dojo</item>
-        <item>n17@dojo</item>
-        <item>n18@dojo</item>
-        <item>n19@dojo</item>
-        <item>n20@dojo</item>
+        <item>Chargement de la liste en cours</item>
     </string-array>
 </resources>

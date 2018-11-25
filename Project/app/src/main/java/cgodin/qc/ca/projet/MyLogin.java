@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class MyLogin {
     public static String path = "http://424v.cgodin.qc.ca:8082";
-    public String JSESSIONID = "";
+    public static String JSESSIONID = "";
 
-    public void etablirConnexion( RequestQueue MyRequestQueue, String username, String password)   {
+    public void etablirConnexion( RequestQueue MyRequestQueue, String username, String password, MainActivity activity)   {
 
         String strUrl = path+"/api/authenticate/"+username+"/"+password;
         Log.d("STOMP", "etablirConnexion() : "+strUrl);
@@ -24,6 +24,7 @@ public class MyLogin {
             @Override
             public void onResponse(String response) {
                Log.i("reponse", "REPONSE : "+response);
+                activity.afficherInformationCompte();
             }
         }, new Response.ErrorListener() {
             @Override
