@@ -10,17 +10,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import cgodin.qc.ca.projet.AncienneteFragment;
+import cgodin.qc.ca.projet.ExamenFragment;
 import cgodin.qc.ca.projet.MainActivity;
 import cgodin.qc.ca.projet.MyLogin;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
-public class RequeteAnciennete extends AsyncTask<String, Void, String> {
+public class RequeteExamen extends AsyncTask<String, Void, String> {
 
-    private AncienneteFragment fragment;
+    private ExamenFragment fragment;
 
-    public RequeteAnciennete(AncienneteFragment fragment){
+    public RequeteExamen(ExamenFragment fragment){
         this.fragment = fragment;
     }
 

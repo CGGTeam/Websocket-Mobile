@@ -18,7 +18,7 @@ public class CompteImpl implements Compte {
     private int chouchou;
     private int entrainement;
     private int talent;
-    
+
     @Override
     public String getCourriel() {
         return courriel;
