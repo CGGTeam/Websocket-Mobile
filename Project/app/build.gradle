@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "cgodin.qc.ca.projet"
-        minSdkVersion 21
+        minSdkVersion 27
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -17,7 +17,11 @@ android {
         }
     }
 }
+
 android {
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -42,11 +46,9 @@ dependencies {
 
     implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.5.4'
 
-    implementation (
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.1'],
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.4.1'],
-            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1']
-    )
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.6'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
 }
 repositories {
     jcenter()

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity
     View header;
 
     //StompSession stomp = new StompSession();
-    Login login = new Login();
+//    Login login = new Login();
 
     public static String SESSIONREST = new String();
 
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
      */
     public boolean connexion(String email, String password, String alias, String ceinture, String role, String img){
 
-        login.etablirConnexion(getString(R.string.path), email, password);
+//        login.etablirConnexion(getString(R.string.path), email, password);
 
 
 
