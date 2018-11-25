@@ -27,14 +27,12 @@ public class RequeteAnciennete extends AsyncTask<String, Void, String> {
     private Exception exception;
 
     protected String doInBackground(String... urls) {
-
         URL url = null;
         try {
             url = new URL(urls[0]);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         OkHttpClient client = new OkHttpClient();
         RequestBody formBody = new FormBody.Builder()
                 .build();
@@ -66,6 +64,6 @@ public class RequeteAnciennete extends AsyncTask<String, Void, String> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        fragment.postExecuted();
+        fragment.postExecuted(feed);
     }
 }

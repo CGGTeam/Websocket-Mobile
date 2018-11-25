@@ -231,8 +231,6 @@ public class MainActivity extends AppCompatActivity
         try {
             JSONObject jsonObj = new JSONObject(feed);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-
             email = jsonObj.getString("courriel");
             alias = jsonObj.getString("alias");
 
