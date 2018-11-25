@@ -52,7 +52,7 @@ public class RequeteInfoCompte extends AsyncTask<String, Void, String> {
         try {
             okhttp3.Response response = client.newCall(request).execute();
             responseData = response.body().string();
-
+            MyLogin.compteCourant = JsonUtils.jsonToObject(responseData, Compte.class);
         } catch (IOException e) {
             e.printStackTrace();
 

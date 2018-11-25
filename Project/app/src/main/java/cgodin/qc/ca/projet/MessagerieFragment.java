@@ -15,15 +15,20 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import cgodin.qc.ca.projet.asynctasks.JsonUtils;
+import cgodin.qc.ca.projet.stomp.Courrier;
 import cgodin.qc.ca.projet.stomp.Reponse;
 import cgodin.qc.ca.projet.stomp.StompTopic;
+import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
@@ -51,7 +56,7 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
     }
 
     private boolean estConnecte() {
-        return false;
+        return !MyLogin.JSESSIONID.equals("");
     }
 
     @Override
@@ -64,10 +69,6 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
 
         btnPublic.setOnClickListener(this);
         btnPrive.setOnClickListener(this);
-
-        btnPublic.setEnabled(false);
-        btnPrive.setEnabled(false);
-
         subscriptions.add(stompClient.topic(StompTopic.Subscribe.CHAT_PUBLIC.getTopic()).subscribe(
                 stompMessage -> {
                     TextView textView = view.findViewById(R.id.txtDernierMessagePublic);
@@ -84,9 +85,6 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
                         textView.setText(reponseServeur.getTexte());
                     }
             ));
-
-            btnPublic.setEnabled(true);
-            btnPrive.setEnabled(true);
         }
 
         return view;
@@ -122,13 +120,65 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
      * Permet l'envoie de message public
      */
     private void envoyerMessagePublic(){
-        stompClient.send(StompTopic.Send.CHAT_PUBLIC.getTopic(), "test");
+        Courrier message = new Courrier();
+        if (MyLogin.compteCourant == null) {
+            message.setTexte("anonyme");
+        } else {
+            message.setTexte(LocalDateTime.now().toString() + " " + MyLogin.compteCourant.getCourriel() + " public");
+        }
+        try {
+            stompClient.send(StompTopic.Send.CHAT_PUBLIC.getTopic(), JsonUtils.objectToJson(message))
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            Log.d("STOMP", "Subscribe");
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.d("STOMP", "Completed");
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d("STOMP", "Erreur", e);
+                        }
+                    });
+        } catch (JsonProcessingException e) {
+            Toast.makeText(getContext(), "Échec de la sérialisation", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * Permet l'envoie de message privé
      */
     private void envoyerMessagePrive(){
-        // TODO : implémenter l'envoie de message privé
+        Courrier message = new Courrier();
+        if (MyLogin.compteCourant == null) {
+            message.setTexte("anonyme");
+        } else {
+            message.setTexte(LocalDateTime.now().toString() + " " + MyLogin.compteCourant.getCourriel() + " prive");
+        }
+        try {
+            stompClient.send(StompTopic.Send.CHAT_PRIVE.getTopic(), JsonUtils.objectToJson(message))
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            Log.d("STOMP", "Subscribe");
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.d("STOMP", "Completed");
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d("STOMP", "Erreur", e);
+                        }
+                    });
+        } catch (JsonProcessingException e) {
+            Toast.makeText(getContext(), "Échec de la sérialisation", Toast.LENGTH_SHORT).show();
+        }
     }
 }

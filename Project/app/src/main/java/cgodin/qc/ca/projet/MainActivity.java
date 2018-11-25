@@ -52,7 +52,7 @@ import io.reactivex.Observable;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String STOMP_URL = "ws://424v.cgodin.qc.ca:8082/webSocket/websocket"; // <= Pas une erreur
+    public static final String STOMP_URL = "ws://424v.cgodin.qc.ca:8082/webSocket/websocket"; // <= Pas une erreur
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
     public String email;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
     View header;
 
     MyLogin myLogin = new MyLogin();
-    StompClient stompClient = Stomp.over(PROVIDER, STOMP_URL);
+    public StompClient stompClient = Stomp.over(PROVIDER, STOMP_URL);
 
     public static String SESSIONREST = new String();
 
