@@ -1,64 +1,52 @@
 package cgodin.qc.ca.projet;
 
-/*
-import android.util.Log;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
+import ua.naiksoftware.stomp.ConnectionProvider;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
+import ua.naiksoftware.stomp.client.StompMessage;
 
 public class MyStomp {
+    private static final String URL = "ws://424v.cgodin.qc.ca";
+    private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
-    private StompClient mStompClient;
+    private StompClient stompClient;
 
+    public MyStomp() {
+        stompClient = Stomp.over(PROVIDER, URL);
+    }
 
-    public void subscribeStomp()
-    {
-        Log.d("STOMP","brancherStomp");
-        //mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8100/websocketandroid");
+    public void connect () {
+        stompClient.connect();
+    }
 
-        //mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://424v.cgodin.qc.ca:8100/websocketandroid");
-        mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://424v.cgodin.qc.ca:8100/websocketandroid");
-        mStompClient.lifecycle().subscribe(lifecycleEvent -> {
-            switch (lifecycleEvent.getType()) {
+    public void subscribeTo(String topic, Subscriber subscriber) {
+        this.stompClient.topic(topic).subscribe(new Subscriber<StompMessage>() {
+            @Override
+            public void onSubscribe(Subscription s) {
 
-                case OPENED:
-                    Log.d("STOMP", "Stomp connection opened");
-                    break;
+            }
 
-                case ERROR:
-                    Log.e("STOMP", "Error", lifecycleEvent.getException());
-                    break;
+            @Override
+            public void onNext(StompMessage stompMessage) {
 
-                case CLOSED:
-                    Log.d("STOMP", "Stomp connection closed");
-                    break;
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
-
-        Log.d("STOMP","brancherStomp-over");
-        mStompClient.connect();
-        Log.d("STOMP","brancherStomp-connect");
-
-        mStompClient.topic("/message/reponseandroid").subscribe(topicMessage -> {
-            Log.d("STOMP", topicMessage.getPayload());
-        });
-
-    }
-    public void stopStomp()
-    {
-        Log.d("STOMP","terminerStomp");
-        mStompClient.disconnect();
     }
 
-    public void sendStomp()
-    {
-        Log.d("STOMP","envoyerStomp");
-        Long maintenant = System.currentTimeMillis();
-
-        String t = new Long(maintenant).toString() ;
-
-        mStompClient.send("/messages/message/android",  "{\"de\":\"Vénérable\",\"texte\":\"envoyé par Android\",\"creation\":" + t + ",\"id_avatar\":\"v1@dojo\"}").subscribe();
-
+    public void disconnect() {
+        stompClient.disconnect();
     }
 }
-*/

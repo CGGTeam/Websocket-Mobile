@@ -1,6 +1,5 @@
 package cgodin.qc.ca.projet;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -10,18 +9,26 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import cgodin.qc.ca.projet.stomp.StompTopic;
+import io.reactivex.disposables.Disposable;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+
+import io.reactivex.Observable;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String STOMP_URL = "ws://424v.cgodin.qc.ca:8082/webSocket/websocket"; // <= Pas une erreur
+    private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
     DrawerLayout drawer;
     ConstraintLayout constraintLayout;
@@ -29,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     View header;
 
     MyLogin myLogin = new MyLogin();
-    //MyStomp myStomp = new MyStomp();
+    StompClient stompClient = Stomp.over(PROVIDER, STOMP_URL);
 
     public static String SESSIONREST = new String();
 
@@ -62,6 +69,23 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, new AccueilFragment(), getString(R.string.text_Connexion)).commit();
         setTitle(R.string.text_Connexion);
         */
+
+        stompClient.lifecycle()
+                    .subscribe(lsEvent -> {
+                        switch (lsEvent.getType()) {
+                            case OPENED:
+                                Log.d("STOMP", "Stomp connection opened");
+                                break;
+                            case ERROR:
+                                Log.d("STOMP", "Error", lsEvent.getException());
+                                break;
+                            case CLOSED:
+                                Log.d("STOMP", "Stomp connection closed");
+                                break;
+                        }
+                    });
+
+        stompClient.connect();
 
         final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
     }
@@ -123,6 +147,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_messagerie:
                 fragment = new MessagerieFragment();
+                ((MessagerieFragment)fragment).setStompClient(stompClient);
                 titre = R.string.messagerie;
                 break;
             default:
@@ -141,7 +166,6 @@ public class MainActivity extends AppCompatActivity
     /**
      * Permet de se connecter
      * @param email
-     * @param alias
      * @return si erreur
      */
     public boolean connexion(String email, String password){
@@ -159,5 +183,9 @@ public class MainActivity extends AppCompatActivity
         ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, ceinture,role));
 
         return true;
+    }
+
+    public StompClient getStompClient() {
+        return stompClient;
     }
 }
