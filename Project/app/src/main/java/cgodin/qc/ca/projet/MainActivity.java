@@ -243,7 +243,8 @@ public class MainActivity extends AppCompatActivity
 
             String strUrl = myLogin.path+"/api/avatars/"+img;
 
-            ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion_reussi,email));
+            if((TextView)findViewById(R.id.txt_etat_connection) != null)
+                ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion_reussi,email));
 
             ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
             ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);

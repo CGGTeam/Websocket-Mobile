@@ -88,6 +88,7 @@ public class ExamenFragment extends Fragment implements View.OnClickListener{
 
     public void postExecuted(String reponse){
         ((TextView)view.findViewById(R.id.textEtatExamen)).setText(reponse);
+
         ((MainActivity)getActivity()).reconnexion();
     }
 }
