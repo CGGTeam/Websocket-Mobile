@@ -42,11 +42,13 @@ public class RequeteListe<T> extends AsyncTask<String, Integer, List<T>>{
     @Override
     protected void onPostExecute(List<T> ts) {
         super.onPostExecute(ts);
-        if (ts == null) {
-            handler.echecRequete();
-        } else {
-            handler.afficherList(ts);
-        }
+        try {
+            if (ts == null) {
+                handler.echecRequete();
+            } else {
+                handler.afficherList(ts);
+            }
+        } catch (Exception ignored) {}
     }
 
     private List<T> readResponse(HttpURLConnection connection, Class<T> targetType) {
