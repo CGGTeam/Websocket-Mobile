@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ import java.util.Map;
 import cgodin.qc.ca.projet.asynctasks.RequeteAvatar;
 import cgodin.qc.ca.projet.asynctasks.RequeteInfoCompte;
 import cgodin.qc.ca.projet.models.Compte;
+import cgodin.qc.ca.projet.models.CompteImpl;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -52,6 +54,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String STOMP_URL = "ws://424v.cgodin.qc.ca:8082/webSocket/websocket"; // <= Pas une erreur
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
+
+    public String email;
+    public String alias;
+    public String role;
+    public String groupe;
+    public String img;
 
     DrawerLayout drawer;
     ConstraintLayout constraintLayout;
@@ -208,21 +216,26 @@ public class MainActivity extends AppCompatActivity
         try {
             JSONObject jsonObj = new JSONObject(feed);
 
-            String email = jsonObj.getString("courriel");
-            String alias = jsonObj.getString("alias");
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            String carJson =
+                    "{ \"brand\" : \"Mercedes\", \"doors\" : 5 }";
+
+            email = jsonObj.getString("courriel");
+            alias = jsonObj.getString("alias");
 
             JSONObject jsonObjCeinture = new JSONObject(jsonObj.getString("groupe"));
             JSONObject jsonObjRole = new JSONObject(jsonObj.getString("role"));
-            String ceinture = jsonObjCeinture.getString("groupe");
-            String role = jsonObjRole.getString("role");
+            groupe = jsonObjCeinture.getString("groupe");
+            role = jsonObjRole.getString("role");
 
-            String img = jsonObj.getString("avatarId");
+            img = jsonObj.getString("avatarId");
 
             String strUrl = myLogin.path+"/api/avatars/"+img;
 
             ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
             ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
-            ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, ceinture,role));
+            ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, role,role));
 
             new RequeteAvatar(this).execute(strUrl);
 

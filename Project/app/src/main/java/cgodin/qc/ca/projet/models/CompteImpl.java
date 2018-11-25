@@ -19,6 +19,14 @@ public class CompteImpl implements Compte {
     private int entrainement;
     private int talent;
 
+    public CompteImpl(String courriel, String alias, Role role, Groupe groupe, long avatarId){
+        this.courriel=courriel;
+        this.alias=alias;
+        this.role=role;
+        this.groupe=groupe;
+        this.avatarId = avatarId;
+    }
+
     @Override
     public String getCourriel() {
         return courriel;

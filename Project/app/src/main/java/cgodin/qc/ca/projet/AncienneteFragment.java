@@ -4,11 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import cgodin.qc.ca.projet.asynctasks.RequeteAnciennete;
 
 
 public class AncienneteFragment extends Fragment implements View.OnClickListener {
@@ -57,6 +60,12 @@ public class AncienneteFragment extends Fragment implements View.OnClickListener
      * Permet d'augmenter le role du compte courant
      */
     private void promotion(){
-        // TODO : implémenter la changement de role (NOUVEAU->ANCIEN)
+        String strUrl = MyLogin.path+"/api/compte/role/"+((MainActivity)getActivity()).email;
+        Log.i("anciennete", "ANCIENNETE URL : "+strUrl);
+
+        new RequeteAnciennete(this).execute(strUrl);
+    }
+    public void postExecuted(){
+        ((MainActivity)getActivity()).afficherInformationCompte();
     }
 }
