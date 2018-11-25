@@ -12,20 +12,20 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.Map;
 
 public class MyLogin {
-    public static String path = "http://10.0.2.2:8082";
-
+    public static String path = "http://424v.cgodin.qc.ca:8082";
+    public String JSESSIONID = "";
 
     public void etablirConnexion( RequestQueue MyRequestQueue, String username, String password)   {
 
-        Log.d("STOMP", "etablirConnexion()");
         String strUrl = path+"/api/authenticate/"+username+"/"+password;
+        Log.d("STOMP", "etablirConnexion() : "+strUrl);
 
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, strUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                Log.i("reponse", "REPONSE : "+response);
             }
-        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("error", "ERROR : "+error);
@@ -35,12 +35,19 @@ public class MyLogin {
 
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                // since we don't know which of the two underlying network vehicles
-                // will Volley use, we have to handle and store session cookies manually
-                Log.i("response",response.headers.toString());
                 Map<String, String> responseHeaders = response.headers;
                 String rawCookies = responseHeaders.get("Set-Cookie");
                 Log.i("cookies",rawCookies);
+
+                String[] cookieSplit = rawCookies.split("=");
+                if ((cookieSplit[0] != null) && (cookieSplit[0].trim().matches("JSESSIONID"))) {
+                    if (cookieSplit[1] != null)
+                        JSESSIONID = (cookieSplit[1].split(";")[0]);
+                    else
+                        JSESSIONID = null;
+                    Log.i("JSESSIONSID",JSESSIONID);
+                }
+
                 return super.parseNetworkResponse(response);
             }
 
