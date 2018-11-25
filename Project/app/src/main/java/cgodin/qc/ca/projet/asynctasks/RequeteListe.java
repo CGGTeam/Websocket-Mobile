@@ -16,9 +16,11 @@ import cgodin.qc.ca.projet.models.Compte;
 
 public class RequeteListe<T> extends AsyncTask<String, Integer, List<T>>{
     private Handler<T> handler;
+    private Class<T> targetType;
 
-    public RequeteListe(Handler<T> handler) {
+    public RequeteListe(Handler<T> handler, Class<T> targetType) {
         this.handler = handler;
+        this.targetType = targetType;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class RequeteListe<T> extends AsyncTask<String, Integer, List<T>>{
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
 
-            return readResponse(connection);
+            return readResponse(connection, targetType);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -47,10 +49,10 @@ public class RequeteListe<T> extends AsyncTask<String, Integer, List<T>>{
         }
     }
 
-    private List<T> readResponse(HttpURLConnection connection) {
+    private List<T> readResponse(HttpURLConnection connection, Class<T> targetType) {
         try {
             String response = JsonUtils.readFromConnection(connection);
-            return JsonUtils.jsonToListOfObject(response);
+            return JsonUtils.jsonToListOfObject(response, targetType);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

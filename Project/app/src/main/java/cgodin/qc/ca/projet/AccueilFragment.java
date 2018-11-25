@@ -25,7 +25,7 @@ import cgodin.qc.ca.projet.models.SessionUtilisateur;
 
 
 public class AccueilFragment extends Fragment implements View.OnClickListener, RequeteListe.Handler<Compte> {
-    private static final String URL_COMPTES = "http://10.0.2.2:8082/api/comptes/defaults";
+    private static final String URL_COMPTES = "http://424v.cgodin.qc.ca:8082/api/comptes/defaults";
 
     View view;
     public AccueilFragment() {
@@ -52,7 +52,7 @@ public class AccueilFragment extends Fragment implements View.OnClickListener, R
     }
 
     private void remplirListeCombattants() {
-        RequeteListe<Compte> requeteComptes = new RequeteListe<>(this);
+        RequeteListe<Compte> requeteComptes = new RequeteListe<>(this, Compte.class);
 
         requeteComptes.execute(URL_COMPTES);
     }
@@ -106,6 +106,6 @@ public class AccueilFragment extends Fragment implements View.OnClickListener, R
 
     @Override
     public void echecRequete() {
-//        Toast.makeText(getContext(),"Erreur en recueillant la liste des combattants.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),"Erreur en recueillant la liste des combattants.", Toast.LENGTH_SHORT).show();
     }
 }

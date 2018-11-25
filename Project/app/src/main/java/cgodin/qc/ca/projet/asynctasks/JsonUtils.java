@@ -2,6 +2,7 @@ package cgodin.qc.ca.projet.asynctasks;
 
         import com.fasterxml.jackson.core.JsonProcessingException;
         import com.fasterxml.jackson.core.type.TypeReference;
+        import com.fasterxml.jackson.databind.JavaType;
         import com.fasterxml.jackson.databind.ObjectMapper;
 
         import java.io.BufferedReader;
@@ -16,9 +17,10 @@ public class JsonUtils {
         return  mapper.readValue(jsonString, targetType);
     }
 
-    public static <T> List<T> jsonToListOfObject(String jsonString) throws IOException {
+    public static <T> List<T> jsonToListOfObject(String jsonString, Class<T> targetType) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
-        return  mapper.readValue(jsonString, new TypeReference<List<T>>(){});
+        JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, targetType);
+        return  mapper.readValue(jsonString, type);
     }
 
     public static String objectToJson(Object object) throws JsonProcessingException {
