@@ -81,18 +81,14 @@ public class AccueilFragment extends Fragment implements View.OnClickListener, R
      * Permet la tentative de connexion
      */
     private void tentativeConnexion(){
-        Toast.makeText(view.getContext(), "Connexion",   Toast.LENGTH_LONG).show();
-        // TODO : implémenter la connexion
 
-        String email = "v1@dojo";
+        Spinner spinnerCompte = view.findViewById(R.id.spinner_combattants);
+        String email = String.valueOf(spinnerCompte.getSelectedItem());
+
         String password = "Patate123";
-        String alias = "Test";
-        String ceinture = "Rouge";
-        String role = "Sensei";
-        String img = "";
 
         //Pour afficher les information du compte dans le header du drawer
-        ((MainActivity)getActivity()).connexion(email, password, alias, ceinture, role, img);
+        ((MainActivity)getActivity()).connexion(email, password);
     }
 
     @Override

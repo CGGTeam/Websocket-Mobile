@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,8 +28,8 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     View header;
 
-    //StompSession stomp = new StompSession();
-//    Login login = new Login();
+    MyLogin myLogin = new MyLogin();
+    //MyStomp myStomp = new MyStomp();
 
     public static String SESSIONREST = new String();
 
@@ -59,6 +62,8 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, new AccueilFragment(), getString(R.string.text_Connexion)).commit();
         setTitle(R.string.text_Connexion);
         */
+
+        final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
     }
 
     @Override
@@ -139,11 +144,15 @@ public class MainActivity extends AppCompatActivity
      * @param alias
      * @return si erreur
      */
-    public boolean connexion(String email, String password, String alias, String ceinture, String role, String img){
+    public boolean connexion(String email, String password){
 
-//        login.etablirConnexion(getString(R.string.path), email, password);
+        final RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
+        myLogin.etablirConnexion(MyRequestQueue,email,password);
 
-
+        String alias = "Test";
+        String ceinture = "Rouge";
+        String role = "Sensei";
+        String img = "";
 
         ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
         ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
