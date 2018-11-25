@@ -18,7 +18,8 @@
     <string name="text_anciennte">Page d\'ancienneté</string>
     <string name="text_Connexion">Connexion</string>
     <string name="btn_text_connexion">connexion</string>
-    <string name="test_etat_connexion">État de la connexion</string>
+    <string name="test_etat_connexion">Déconnecté</string>
+    <string name="test_etat_connexion_reussi">Connecté avec : %1$s</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -52,5 +53,6 @@
     <string name="button_nul">Nul</string>
     <string name="button_arbittre_sansFautes" >Abritre sans fautes</string>
     <string name="button_arbittre_avecFautes">Arbitre avec fautes</string>
+    <string name="button_deconnexion">Déconnexion</string>
 
 </resources>

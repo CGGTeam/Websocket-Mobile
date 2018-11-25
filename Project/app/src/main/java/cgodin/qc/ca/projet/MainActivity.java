@@ -210,7 +210,15 @@ public class MainActivity extends AppCompatActivity
         final RequestQueue RequestQueue = Volley.newRequestQueue(this);
         myLogin.etablirConnexion(RequestQueue,email,"Patate123", this);
     }
+    public void deconnexion(){
+        ((TextView)header.findViewById(R.id.txtEmail)).setText(R.string.email_Anonyme);
+        ((TextView)header.findViewById(R.id.txtAlias)).setText(R.string.alias_Anonyme);
+        ((TextView)header.findViewById(R.id.txtCeinture)).setText(R.string.ceinture_Anonyme);
 
+        ((ImageView)header.findViewById(R.id.imgHeaderAccount)).setImageResource(R.mipmap.ic_launcher_round);
+
+        ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion));
+    }
     public void afficherInformationCompte(){
         String strUrl = myLogin.path+"/api/monCompte";
 
@@ -221,9 +229,6 @@ public class MainActivity extends AppCompatActivity
             JSONObject jsonObj = new JSONObject(feed);
 
             ObjectMapper objectMapper = new ObjectMapper();
-
-            String carJson =
-                    "{ \"brand\" : \"Mercedes\", \"doors\" : 5 }";
 
             email = jsonObj.getString("courriel");
             alias = jsonObj.getString("alias");
@@ -237,9 +242,11 @@ public class MainActivity extends AppCompatActivity
 
             String strUrl = myLogin.path+"/api/avatars/"+img;
 
+            ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion_reussi,email));
+
             ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
             ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
-            ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, role,role));
+            ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, groupe,role));
 
             new RequeteAvatar(this).execute(strUrl);
 

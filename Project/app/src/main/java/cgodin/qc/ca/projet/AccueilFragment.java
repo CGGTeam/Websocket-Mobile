@@ -44,6 +44,8 @@ public class AccueilFragment extends Fragment implements View.OnClickListener, R
         this.view=view;
 
         (view.findViewById(R.id.btnConnexion)).setOnClickListener(this);
+        (view.findViewById(R.id.btnDeconnexion)).setOnClickListener(this);
+
         ((TextView)view.findViewById(R.id.txt_etat_connection)).setText(SessionUtilisateur.getEtatConnexion());
 
         remplirListeCombattants();
@@ -73,6 +75,9 @@ public class AccueilFragment extends Fragment implements View.OnClickListener, R
             case R.id.btnConnexion :
                 tentativeConnexion();
                 break;
+            case R.id.btnDeconnexion :
+                deconnexion();
+                break;
         }
 
     }
@@ -90,7 +95,10 @@ public class AccueilFragment extends Fragment implements View.OnClickListener, R
         //Pour afficher les information du compte dans le header du drawer
         ((MainActivity)getActivity()).connexion(email, password);
     }
-
+    private void deconnexion(){
+        MyLogin.JSESSIONID = "";
+        ((MainActivity)getActivity()).deconnexion();
+    }
     @Override
     public void afficherList(List<Compte> listeComptes) {
         Spinner combattants = view.findViewById(R.id.spinner_combattants);
