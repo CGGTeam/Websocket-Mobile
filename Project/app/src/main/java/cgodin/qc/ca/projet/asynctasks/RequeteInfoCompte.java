@@ -17,6 +17,7 @@ import java.util.Map;
 import cgodin.qc.ca.projet.MainActivity;
 import cgodin.qc.ca.projet.MyLogin;
 import cgodin.qc.ca.projet.models.Compte;
+import cgodin.qc.ca.projet.models.CompteImpl;
 import okhttp3.OkHttpClient;
 
 public class RequeteInfoCompte extends AsyncTask<String, Void, String> {
@@ -52,7 +53,7 @@ public class RequeteInfoCompte extends AsyncTask<String, Void, String> {
         try {
             okhttp3.Response response = client.newCall(request).execute();
             responseData = response.body().string();
-            MyLogin.compteCourant = JsonUtils.jsonToObject(responseData, Compte.class);
+            MyLogin.compteCourant = (CompteImpl) JsonUtils.jsonToObject(responseData, Compte.class);
         } catch (IOException e) {
             e.printStackTrace();
 

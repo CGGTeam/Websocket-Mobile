@@ -41,4 +41,10 @@
         android:layout_height="wrap_content"
         android:text="@string/ceinture_Anonyme" />
 
+    <TextView
+        android:id="@+id/txt_pointsCredits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ceinture_Anonyme" />
+
 </LinearLayout>

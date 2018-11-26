@@ -1,6 +1,5 @@
 package cgodin.qc.ca.projet;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,54 +11,37 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.Map;
-
 import cgodin.qc.ca.projet.asynctasks.RequeteAvatar;
 import cgodin.qc.ca.projet.asynctasks.RequeteInfoCompte;
-import cgodin.qc.ca.projet.models.Compte;
-import cgodin.qc.ca.projet.models.CompteImpl;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import cgodin.qc.ca.projet.stomp.StompTopic;
-import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-import io.reactivex.Observable;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String STOMP_URL = "ws://424v.cgodin.qc.ca:8082/webSocket/websocket"; // <= Pas une erreur
+    public static final String HOTE = "192.168.2.50:8082";
+    public static final String STOMP_URL = "ws://" + HOTE + "/webSocket/websocket"; // <= Pas une erreur
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
-    public String email;
-    public String alias;
-    public String role;
-    public String groupe;
-    public String img;
+    public static String email;
+    public static String alias;
+    public static String role;
+    public static String groupe;
+    public static String img;
+    public static String points;
+    public static String credits;
 
     DrawerLayout drawer;
     ConstraintLayout constraintLayout;
@@ -69,13 +51,11 @@ public class MainActivity extends AppCompatActivity
     MyLogin myLogin = new MyLogin();
     public StompClient stompClient = Stomp.over(PROVIDER, STOMP_URL);
 
-    public static String SESSIONREST = new String();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //le main layout ou les fragments sont inflate
@@ -166,6 +146,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_combat:
                 fragment = new CombatFragment();
+                ((CombatFragment)fragment).setClient(stompClient);
                 titre = R.string.combat;
                 break;
             case R.id.nav_examen:
@@ -194,6 +175,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stompClient.disconnect();
+    }
+
     /**
      * Permet de se connecter
      * @param email
@@ -206,6 +193,7 @@ public class MainActivity extends AppCompatActivity
         myLogin.etablirConnexion(RequestQueue,email,password, this);
         return true;
     }
+
     public void reconnexion(){
         final RequestQueue RequestQueue = Volley.newRequestQueue(this);
         myLogin.etablirConnexion(RequestQueue,email,"Patate123", this);
@@ -233,6 +221,8 @@ public class MainActivity extends AppCompatActivity
 
             email = jsonObj.getString("courriel");
             alias = jsonObj.getString("alias");
+            points = jsonObj.getString("points");
+            credits = jsonObj.getString("credits");
 
             JSONObject jsonObjCeinture = new JSONObject(jsonObj.getString("groupe"));
             JSONObject jsonObjRole = new JSONObject(jsonObj.getString("role"));
@@ -246,9 +236,7 @@ public class MainActivity extends AppCompatActivity
             if((TextView)findViewById(R.id.txt_etat_connection) != null)
                 ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion_reussi,email));
 
-            ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
-            ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
-            ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, groupe,role));
+            updateHeaderView();
 
             new RequeteAvatar(this).execute(strUrl);
 
@@ -257,12 +245,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
     public void showAvatar(byte[] img){
+        try {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
+            ((ImageView)header.findViewById(R.id.imgHeaderAccount)).setImageBitmap(bitmap);
+        } catch (Exception ignored) {
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
-        ((ImageView)header.findViewById(R.id.imgHeaderAccount)).setImageBitmap(bitmap);
+        }
     }
 
-    public StompClient getStompClient() {
-        return stompClient;
+    public View getHeader() {
+        return header;
+    }
+
+    public void updateHeaderView() {
+        ((TextView)header.findViewById(R.id.txtEmail)).setText(email);
+        ((TextView)header.findViewById(R.id.txtAlias)).setText(alias);
+        ((TextView)header.findViewById(R.id.txtCeinture)).setText(getString(R.string.ceinture, groupe,role));
+        ((TextView)header.findViewById(R.id.txt_pointsCredits)).setText(getString(R.string.header_points, points, credits));
     }
 }

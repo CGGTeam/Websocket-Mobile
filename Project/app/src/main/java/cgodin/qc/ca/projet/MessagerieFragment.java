@@ -69,7 +69,7 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
 
         btnPublic.setOnClickListener(this);
         btnPrive.setOnClickListener(this);
-        subscriptions.add(stompClient.topic(StompTopic.Subscribe.CHAT_PUBLIC.getTopic()).subscribe(
+        subscriptions.add(stompClient.topic(StompTopic.Subscribe.CHAT_PUBLIC).subscribe(
                 stompMessage -> {
                     TextView textView = view.findViewById(R.id.txtDernierMessagePublic);
                     Reponse reponseServeur = JsonUtils.jsonToObject(stompMessage.getPayload(), Reponse.class);
@@ -78,7 +78,7 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
         ));
 
         if (estConnecte()) {
-            subscriptions.add(stompClient.topic(StompTopic.Subscribe.CHAT_PRIVE.getTopic()).subscribe(
+            subscriptions.add(stompClient.topic(StompTopic.Subscribe.CHAT_PRIVE).subscribe(
                     stompMessage -> {
                         TextView textView = view.findViewById(R.id.txtDernierMessagePrive);
                         Reponse reponseServeur = JsonUtils.jsonToObject(stompMessage.getPayload(), Reponse.class);
@@ -127,7 +127,7 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
             message.setTexte(LocalDateTime.now().toString() + " " + MyLogin.compteCourant.getCourriel() + " public");
         }
         try {
-            stompClient.send(StompTopic.Send.CHAT_PUBLIC.getTopic(), JsonUtils.objectToJson(message))
+            stompClient.send(StompTopic.Send.CHAT_PUBLIC, JsonUtils.objectToJson(message))
                     .subscribe(new CompletableObserver() {
                         @Override
                         public void onSubscribe(Disposable d) {
@@ -160,23 +160,23 @@ public class MessagerieFragment extends Fragment implements View.OnClickListener
             message.setTexte(LocalDateTime.now().toString() + " " + MyLogin.compteCourant.getCourriel() + " prive");
         }
         try {
-            stompClient.send(StompTopic.Send.CHAT_PRIVE.getTopic(), JsonUtils.objectToJson(message))
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            Log.d("STOMP", "Subscribe");
-                        }
+            stompClient.send(StompTopic.Send.CHAT_PRIVE, JsonUtils.objectToJson(message))
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d("STOMP", "Subscribe");
+                    }
 
-                        @Override
-                        public void onComplete() {
-                            Log.d("STOMP", "Completed");
-                        }
+                    @Override
+                    public void onComplete() {
+                        Log.d("STOMP", "Completed");
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.d("STOMP", "Erreur", e);
-                        }
-                    });
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("STOMP", "Erreur", e);
+                    }
+                });
         } catch (JsonProcessingException e) {
             Toast.makeText(getContext(), "Échec de la sérialisation", Toast.LENGTH_SHORT).show();
         }

@@ -29,7 +29,7 @@
     <string name="button_messagePrive" >Message Privé</string>
     <string name="text_dernierMessagePublic">dernier message public</string>
     <string name="text_dernierMessagePrive">dernier message privé</string>
-    <string name="button_examenReeussi">Examen réeussi</string>
+    <string name="button_examenReeussi">Examen réussi</string>
     <string name="button_examenEchec">examen échec</string>
     <string name="text_etat_examen">État de l\'examen</string>
 
@@ -37,15 +37,16 @@
     <string name="text_etat_anciennte">État de l\'anciennete</string>
 
     <string name="ceinture">Ceinture : %1$s , Role : %2$s</string>
+    <string name="header_points">Points : %1$s , Crédits : %2$s</string>
     <string name="ceinture_Anonyme"> </string>
     <string name="email_Anonyme" />
     <string name="alias_Anonyme">Anonyme</string>
     <string name="ailleurs">ailleurs</string>
     <string name="spectateur">spectateur</string>
     <string name="attente">attente</string>
-    <string name="list_Ailleurs">Liste ailleurs :</string>
-    <string name="liste_Spectateur">Liste spectateur :</string>
-    <string name="liste_Attente">Liste attente :</string>
+    <string name="list_Ailleurs">Liste ailleurs :\n</string>
+    <string name="liste_Spectateur">Liste spectateur :\n</string>
+    <string name="liste_Attente">Liste attente :\n</string>
     <string name="etre_arbitre">Je veux être arbitre</string>
     <string name="liste_Arbitre">Liste arbitre :</string>
     <string name="button_gagner">Gagner</string>

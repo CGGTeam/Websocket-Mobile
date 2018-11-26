@@ -8,5 +8,5 @@ public enum LobbyRole {
     SPECTATEUR,
     ROUGE,
     BLANC,
-    ARBITRE,
+    ARBITRE, AILLEURS,
 }
