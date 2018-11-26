@@ -31,17 +31,17 @@ import ua.naiksoftware.stomp.client.StompClient;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String HOTE = "192.168.2.50:8082";
+    public static final String HOTE = "424v.cgodin.qc.ca:8082";
     public static final String STOMP_URL = "ws://" + HOTE + "/webSocket/websocket"; // <= Pas une erreur
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
-    public static String email;
-    public static String alias;
-    public static String role;
-    public static String groupe;
-    public static String img;
-    public static String points;
-    public static String credits;
+    public String email;
+    public String alias;
+    public String role;
+    public String groupe;
+    public String img;
+    public String points;
+    public String credits;
 
     DrawerLayout drawer;
     ConstraintLayout constraintLayout;

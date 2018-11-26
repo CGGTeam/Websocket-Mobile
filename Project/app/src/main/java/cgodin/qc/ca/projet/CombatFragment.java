@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cgodin.qc.ca.projet.asynctasks.JsonUtils;
-import cgodin.qc.ca.projet.asynctasks.RequeteJoindre;
 import cgodin.qc.ca.projet.stomp.Commande;
 import cgodin.qc.ca.projet.stomp.DonneesReponseCommande;
 import cgodin.qc.ca.projet.stomp.HearbeatLoop;
@@ -121,15 +120,13 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
         txtDerniereCommande = view.findViewById(R.id.txt_derniereCommande);
         txtArbitre = view.findViewById(R.id.lstArbitre);
 
-        final TextView textView = txtDerniereCommande;
-
-        new RequeteJoindre(client).execute();
         subscriptions.add(client.topic(StompTopic.Subscribe.COMMANDE)
                 .subscribe(
                 stompMessage -> {
                     try {
                         ReponseCommande reponseCommande = JsonUtils.jsonToObject(stompMessage.getPayload(), ReponseCommande.class);
                         DonneesReponseCommande donneesReponseCommande = reponseCommande.getDonnees();
+                        mainActivity.runOnUiThread(() -> txtDerniereCommande.setText("OK"));
 
 
                         switch (donneesReponseCommande.getTypeCommande()) {
@@ -142,17 +139,24 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                                 break;
                             case ERREUR:
                                 mainActivity.runOnUiThread(() -> {
-                                    textView.setText(reponseCommande.getTexte());
+                                    txtDerniereCommande.setText(reponseCommande.getTexte());
                                 });
                                 break;
                         }
 
-                        mainActivity.runOnUiThread(() -> txtDerniereCommande.setText("OK"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
         ));
+
+        Commande commande = new Commande(TypeCommande.JOINDRE);
+        try {
+            client.send(StompTopic.Send.COMMANDE, JsonUtils.objectToJson(commande))
+                    .subscribe();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         hearbeatLoop = new HearbeatLoop(client);
         new Thread(hearbeatLoop).start();
@@ -170,8 +174,8 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                 MyLogin.compteCourant.setPoints(Integer.parseInt(params[0].replace("\"", "")));
                 MyLogin.compteCourant.setCredits(Integer.parseInt(params[1].replace("\"", "")));
 
-                MainActivity.points = params[0];
-                MainActivity.credits = params[1];
+                mainActivity.points = params[0];
+                mainActivity.credits = params[1];
 
                 mainActivity.updateHeaderView();
             }
