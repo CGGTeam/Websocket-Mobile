@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity
 
         ((ImageView)header.findViewById(R.id.imgHeaderAccount)).setImageResource(R.mipmap.ic_launcher_round);
 
+        stompClient.disconnect();
         ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion));
     }
     public void afficherErreurConnexion(String message){
