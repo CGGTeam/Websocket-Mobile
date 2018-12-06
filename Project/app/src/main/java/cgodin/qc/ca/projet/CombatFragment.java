@@ -128,7 +128,6 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                         DonneesReponseCommande donneesReponseCommande = reponseCommande.getDonnees();
                         mainActivity.runOnUiThread(() -> txtDerniereCommande.setText("OK"));
 
-
                         switch (donneesReponseCommande.getTypeCommande()) {
                             case ROLE:
                             case JOINDRE:
