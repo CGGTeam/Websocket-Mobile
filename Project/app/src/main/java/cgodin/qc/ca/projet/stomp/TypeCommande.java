@@ -10,5 +10,8 @@ public enum TypeCommande {
     SALUER,
     SIGNALER,
     POSITION,
+    DECONNECTER,
+    CONNECTER,
     MATCH_STATE,
+    COMBAT, ERREUR,
 }

@@ -8,8 +8,10 @@ import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 import ua.naiksoftware.stomp.client.StompMessage;
 
+import static cgodin.qc.ca.projet.MainActivity.HOTE;
+
 public class MyStomp {
-    private static final String URL = "ws://424v.cgodin.qc.ca";
+    private static final String URL = "ws://" + HOTE;
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
     private StompClient stompClient;

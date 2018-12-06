@@ -12,10 +12,18 @@ public class LobbyUserData implements SanitizedLobbyUser {
     private Role role;
     private Groupe groupe;
     private LobbyRole roleCombat;
+    private int credits;
+    private int points;
+    private Compte compte;
 
     @Override
     public LobbyRole getRoleCombat() {
         return roleCombat;
+    }
+
+    @Override
+    public Compte getUser() {
+        return compte;
     }
 
     @Override

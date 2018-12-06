@@ -6,8 +6,14 @@ public class Commande extends Message {
 
     public Commande(){}
 
-    public Commande(String... parametres) {
+    public Commande(TypeCommande typeCommande) {
         super();
+        this.typeCommande = typeCommande;
+    }
+
+    public Commande(TypeCommande typeCommande, String... parametres) {
+        super();
+        this.typeCommande = typeCommande;
         this.parametres = parametres;
     }
 

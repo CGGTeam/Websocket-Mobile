@@ -20,6 +20,13 @@ public class Reponse {
         this.id = id;
     }
 
+    public Reponse(Long id, SanitizedUser de, String texte, Long creation) {
+        this.id = id;
+        this.de = de;
+        this.texte = texte;
+        this.creation = creation;
+    }
+
     public Reponse() {
     }
 

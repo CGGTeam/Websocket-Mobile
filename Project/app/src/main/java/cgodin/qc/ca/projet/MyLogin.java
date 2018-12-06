@@ -15,16 +15,19 @@ import java.util.List;
 import java.util.Map;
 
 import cgodin.qc.ca.projet.models.Compte;
+import cgodin.qc.ca.projet.models.CompteImpl;
 import cgodin.qc.ca.projet.stomp.StompUtils;
 import ua.naiksoftware.stomp.ConnectionProvider;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompHeader;
 import ua.naiksoftware.stomp.client.StompClient;
 
+import static cgodin.qc.ca.projet.MainActivity.HOTE;
+
 public class MyLogin {
-    public static String path = "http://424v.cgodin.qc.ca:8082";
+    public static String path = "http://" + HOTE;
     public static String JSESSIONID = "";
-    public static Compte compteCourant = null;
+    public static CompteImpl compteCourant = null;
 
     public void etablirConnexion( RequestQueue MyRequestQueue, String username, String password, final MainActivity activity)   {
 
@@ -38,13 +41,6 @@ public class MyLogin {
             public void onResponse(String response) {
                 Log.i("reponse", "REPONSE : "+response);
                 mainActivity.afficherInformationCompte();
-                mainActivity.stompClient.disconnect();
-
-                HashMap<String, String> connectHeaders = new HashMap<>();
-                connectHeaders.put("Cookie", "JSESSIONID=" + JSESSIONID);
-                mainActivity.stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, MainActivity.STOMP_URL, connectHeaders);
-
-                mainActivity.stompClient.connect();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -62,8 +58,16 @@ public class MyLogin {
 
                 String[] cookieSplit = rawCookies.split("=");
                 if ((cookieSplit[0] != null) && (cookieSplit[0].trim().matches("JSESSIONID"))) {
-                    if (cookieSplit[1] != null)
+                    if (cookieSplit[1] != null) {
                         JSESSIONID = (cookieSplit[1].split(";")[0]);
+                        mainActivity.stompClient.disconnect();
+
+                        HashMap<String, String> connectHeaders = new HashMap<>();
+                        connectHeaders.put("Cookie", "JSESSIONID=" + JSESSIONID);
+                        mainActivity.stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, MainActivity.STOMP_URL, connectHeaders);
+
+                        mainActivity.stompClient.connect();
+                    }
                     else
                         JSESSIONID = null;
                     Log.i("JSESSIONSID",JSESSIONID);

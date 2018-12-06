@@ -63,4 +63,64 @@ public class CompteImpl implements Compte {
     public int getCredits() {
         return credits;
     }
+
+    public void setCourriel(String courriel) {
+        this.courriel = courriel;
+    }
+
+    public String getMotPasse() {
+        return motPasse;
+    }
+
+    public void setMotPasse(String motPasse) {
+        this.motPasse = motPasse;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setGroupe(Groupe groupe) {
+        this.groupe = groupe;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
+
+    public void setDeshonore(boolean deshonore) {
+        this.deshonore = deshonore;
+    }
+
+    public int getChouchou() {
+        return chouchou;
+    }
+
+    public void setChouchou(int chouchou) {
+        this.chouchou = chouchou;
+    }
+
+    public int getEntrainement() {
+        return entrainement;
+    }
+
+    public void setEntrainement(int entrainement) {
+        this.entrainement = entrainement;
+    }
+
+    public int getTalent() {
+        return talent;
+    }
+
+    public void setTalent(int talent) {
+        this.talent = talent;
+    }
 }
