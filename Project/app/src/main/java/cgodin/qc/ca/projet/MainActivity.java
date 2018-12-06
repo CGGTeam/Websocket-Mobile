@@ -220,7 +220,8 @@ public class MainActivity extends AppCompatActivity
         ((TextView)findViewById(R.id.txt_etat_connection)).setText(getString(R.string.test_etat_connexion));
     }
     public void afficherErreurConnexion(String message){
-        ((TextView)findViewById(R.id.txt_etat_connection)).setText(message);
+        if((TextView)findViewById(R.id.txt_etat_connection) != null)
+            ((TextView)findViewById(R.id.txt_etat_connection)).setText(message);
     }
     public void afficherInformationCompte(){
         String strUrl = myLogin.path+"/api/monCompte";
