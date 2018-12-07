@@ -31,7 +31,7 @@ import ua.naiksoftware.stomp.client.StompClient;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String HOTE = "192.168.2.50:8082";
+    public static final String HOTE = "424v.cgodin.qc.ca:8082";
     public static final String STOMP_URL = "ws://" + HOTE + "/webSocket/websocket"; // <= Pas une erreur
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
