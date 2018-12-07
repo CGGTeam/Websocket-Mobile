@@ -85,6 +85,7 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int resId) {
                 RadioButton checkedRadioButton = group.findViewById(resId);
+                if (checkedRadioButton == null) return;
                 boolean isChecked = checkedRadioButton.isChecked();
                 if (isChecked) {
                     ((CheckBox)view.findViewById(R.id.cbArbitre)).setChecked(false);
@@ -326,9 +327,7 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                 annulerMatch();
                 break;
             case R.id.cbArbitre:
-                ((RadioButton)view.findViewById(R.id.radioButton4)).setChecked(false);
-                ((RadioButton)view.findViewById(R.id.radioButton5)).setChecked(false);
-                ((RadioButton)view.findViewById(R.id.radioButton6)).setChecked(false);
+                ((RadioGroup)view.findViewById(R.id.radioGroup)).clearCheck();
                 Commande commande = new Commande(TypeCommande.ROLE, LobbyRole.ARBITRE.toString());
                 sendCommande(commande);
                 break;
