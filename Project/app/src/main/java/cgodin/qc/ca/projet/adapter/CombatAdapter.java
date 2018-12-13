@@ -44,21 +44,25 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         String points = String.valueOf(combatItemList.get(position).getPointsRouge());
         String credits = String.valueOf(combatItemList.get(position).getCreditsArbitre());
 
-        holder.txtDate.setText(sdf.format(new Date(combatItemList.get(position).getTemps() * 1000)));
+        holder.txtDate.setText(sdf.format(new Date(combatItemList.get(position).getTemps())));
         holder.txtPoints.setText(context.getString(R.string.Points, points));
 
-        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getCourriel();
-        new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
-        holder.txtCombattantAutre.setText(combatItemList.get(position).getRouge().getAlias());
+            /*
+            strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getCourriel();
+            new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
+            holder.txtCombattantAutre.setText(combatItemList.get(position).getRouge().getAlias());
 
 
-        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getBlanc().getCourriel();
-        new RequeteAvatar(holder.imgCombattant).execute(strUrl);
-        holder.txtCombattant.setText(combatItemList.get(position).getBlanc().getAlias());
+            strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getBlanc().getCourriel();
+            new RequeteAvatar(holder.imgCombattant).execute(strUrl);
+            holder.txtCombattant.setText(combatItemList.get(position).getBlanc().getAlias());
+            */
 
-        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getArbitre().getCourriel();
-        new RequeteAvatar(holder.imgAbritre).execute(strUrl);
-        holder.txtArbitre.setText(combatItemList.get(position).getArbitre().getAlias());
+            /*
+            strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getArbitre().getCourriel();
+            new RequeteAvatar(holder.imgAbritre).execute(strUrl);
+            holder.txtArbitre.setText(combatItemList.get(position).getArbitre().getAlias());
+            */
         holder.txtCredits.setText(context.getString(R.string.Credits, credits));
     }
 

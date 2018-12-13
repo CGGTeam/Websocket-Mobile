@@ -1,10 +1,15 @@
 package cgodin.qc.ca.projet.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class Combat {
     private Long id;
 
+    @JsonDeserialize(as=CompteImpl.class)
     private Compte rouge;
+    @JsonDeserialize(as=CompteImpl.class)
     private Compte blanc;
+    @JsonDeserialize(as=CompteImpl.class)
     private Compte arbitre;
 
     private int pointsRouge;

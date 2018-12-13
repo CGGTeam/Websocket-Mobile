@@ -56,7 +56,7 @@
                     android:layout_width="34dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    app:srcCompat="@android:color/holo_red_dark" />
+                    android:contentDescription="TODO" app:srcCompat="@android:color/holo_red_dark" />
 
                 <TextView
                     android:id="@+id/id_Combattant"
@@ -77,7 +77,7 @@
                     android:layout_width="34dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    app:srcCompat="@color/colorPrimaryDark" />
+                    android:contentDescription="TODO" app:srcCompat="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/id_Combattant_Autre"
@@ -106,7 +106,7 @@
                     android:layout_width="20dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    app:srcCompat="@mipmap/ic_launcher_round" />
+                    android:contentDescription="TODO" app:srcCompat="@mipmap/ic_launcher_round" />
 
                 <TextView
                     android:id="@+id/id_Arbitre"

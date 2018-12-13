@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import cgodin.qc.ca.projet.MyLogin;
 import cgodin.qc.ca.projet.models.Compte;
 
 public class RequeteListe<T> extends AsyncTask<String, Integer, List<T>>{
@@ -29,6 +30,7 @@ public class RequeteListe<T> extends AsyncTask<String, Integer, List<T>>{
             URL url = new URL(strings[0]);
 
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestProperty("cookie", "JSESSIONID=" + MyLogin.JSESSIONID);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
 
