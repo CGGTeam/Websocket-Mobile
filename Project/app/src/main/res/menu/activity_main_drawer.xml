@@ -24,6 +24,10 @@
             android:id="@+id/nav_messagerie"
             android:icon="@drawable/ic_menu_messagerie"
             android:title="@string/messagerie" />
+        <item
+            android:id="@+id/nav_historique"
+            android:icon="@drawable/ic_menu_historique"
+            android:title="@string/titre_historique" />
     </group>
 
 

@@ -1,7 +1,10 @@
 package cgodin.qc.ca.projet.asynctasks;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -9,14 +12,15 @@ import java.net.URL;
 
 import cgodin.qc.ca.projet.MainActivity;
 import cgodin.qc.ca.projet.MyLogin;
+import cgodin.qc.ca.projet.R;
 import okhttp3.OkHttpClient;
 
 public class RequeteAvatar extends AsyncTask<String, Void, byte[]> {
 
-    private MainActivity activity;
+    private ImageView imgView;
 
-    public RequeteAvatar(MainActivity activity){
-        this.activity = activity;
+    public RequeteAvatar(ImageView imgView){
+        this.imgView = imgView;
     }
 
     private Exception exception;
@@ -53,7 +57,12 @@ public class RequeteAvatar extends AsyncTask<String, Void, byte[]> {
         return bytes;
     }
 
-    protected void onPostExecute(byte[] feed) {
-        activity.showAvatar(feed);
+    protected void onPostExecute(byte[] img) {
+        try {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
+            imgView.setImageBitmap(bitmap);
+        } catch (Exception ignored) {
+
+        }
     }
 }

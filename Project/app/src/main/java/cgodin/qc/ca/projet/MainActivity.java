@@ -162,6 +162,10 @@ public class MainActivity extends AppCompatActivity
                 ((MessagerieFragment)fragment).setStompClient(stompClient);
                 titre = R.string.messagerie;
                 break;
+            case R.id.nav_historique:
+                fragment = new HistoriqueFragment();
+                titre = R.string.titre_historique;
+                break;
             default:
                 fragment = new AccueilFragment();
                 titre = R.string.text_Connexion;
@@ -240,18 +244,10 @@ public class MainActivity extends AppCompatActivity
 
             updateHeaderView();
 
-            new RequeteAvatar(this).execute(strUrl);
+            new RequeteAvatar(((ImageView)header.findViewById(R.id.imgHeaderAccount))).execute(strUrl);
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-    public void showAvatar(byte[] img){
-        try {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
-            ((ImageView)header.findViewById(R.id.imgHeaderAccount)).setImageBitmap(bitmap);
-        } catch (Exception ignored) {
-
         }
     }
 

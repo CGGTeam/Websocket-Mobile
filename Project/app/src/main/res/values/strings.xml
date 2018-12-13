@@ -56,4 +56,9 @@
     <string name="button_arbittre_avecFautes">Arbitre avec fautes</string>
     <string name="button_deconnexion">Déconnexion</string>
 
+    <string name="titre_historique">Historique</string>
+    <string name="titre_historique_combat">Historique de combat</string>
+    <string name="Points">Points : %1$s</string>
+    <string name="Credits">Credits : %1$s</string>
+
 </resources>
