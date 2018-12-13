@@ -47,6 +47,14 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         holder.txtDate.setText(sdf.format(new Date(combatItemList.get(position).getTemps())));
         holder.txtPoints.setText(context.getString(R.string.Points, points));
 
+        strUrl = MyLogin.path+"/api/avatars/1";
+        new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
+
+        strUrl = MyLogin.path+"/api/avatars/2";
+        new RequeteAvatar(holder.imgCombattant).execute(strUrl);
+
+        strUrl = MyLogin.path+"/api/avatars/3";
+        new RequeteAvatar(holder.imgAbritre).execute(strUrl);
             /*
             strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getCourriel();
             new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
