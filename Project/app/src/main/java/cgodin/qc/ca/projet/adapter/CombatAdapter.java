@@ -1,6 +1,8 @@
 package cgodin.qc.ca.projet.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +13,41 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cgodin.qc.ca.projet.MyLogin;
 import cgodin.qc.ca.projet.R;
 import cgodin.qc.ca.projet.asynctasks.RequeteAvatar;
 import cgodin.qc.ca.projet.models.Combat;
+import cgodin.qc.ca.projet.models.Compte;
+import cgodin.qc.ca.projet.models.Groupe;
+import cgodin.qc.ca.projet.stomp.LobbyRole;
 
 public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatViewHolder>{
     private List<Combat> combatItemList;
     Context context;
+    private static Map<Integer, Integer> recompensesSelonDelta;
+    static {
+        recompensesSelonDelta = new HashMap<>();
+
+        recompensesSelonDelta.put(7, 1);
+        recompensesSelonDelta.put(6, 50);
+        recompensesSelonDelta.put(5, 30);
+        recompensesSelonDelta.put(4, 25);
+        recompensesSelonDelta.put(3, 20);
+        recompensesSelonDelta.put(2, 15);
+        recompensesSelonDelta.put(1, 12);
+        recompensesSelonDelta.put(0, 10);
+        recompensesSelonDelta.put(-1, 9);
+        recompensesSelonDelta.put(-2, 7);
+        recompensesSelonDelta.put(-3, 5);
+        recompensesSelonDelta.put(-4, 3);
+        recompensesSelonDelta.put(-5, 2);
+        recompensesSelonDelta.put(-6, 1);
+        recompensesSelonDelta.put(-7, 1);
+    }
 
     public CombatAdapter(List<Combat> combatItemList, Context context) {
         this.combatItemList = combatItemList;
@@ -40,38 +67,73 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         //TODO : implémenter comme du monde
         String strUrl;
+        Compte compteCourant = MyLogin.compteCourant;
 
-        String points = String.valueOf(combatItemList.get(position).getPointsRouge());
+        boolean estRouge = compteCourant.getCourriel().equals(combatItemList.get(position).getRouge().getCourriel());
+
+        String points = estRouge ? String.valueOf(combatItemList.get(position).getPointsRouge())
+                : String.valueOf(combatItemList.get(position).getPointsBlanc());
         String credits = String.valueOf(combatItemList.get(position).getCreditsArbitre());
 
+        if(Integer.parseInt(points) == 10 ) holder.cardView.setBackgroundColor(Color.parseColor("#ccffb3"));
+        else if(Integer.parseInt(points) == 0 ) holder.cardView.setBackgroundColor(Color.parseColor("#ffb3b3"));
+        else if(Integer.parseInt(points) == 5 ) holder.cardView.setBackgroundColor(Color.parseColor("#ffffb3"));
+
+        int intPoints =estRouge? pointsPourMatch(combatItemList.get(position), LobbyRole.ROUGE)
+                : pointsPourMatch(combatItemList.get(position), LobbyRole.BLANC);
+
+        points = String.valueOf(intPoints);
+
+        //Date et Points
         holder.txtDate.setText(sdf.format(new Date(combatItemList.get(position).getTemps())));
         holder.txtPoints.setText(context.getString(R.string.Points, points));
 
-        strUrl = MyLogin.path+"/api/avatars/1";
+        //Rouge
+        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getAvatarId();
         new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
+        holder.txtCombattantAutre.setText(combatItemList.get(position).getRouge().getAlias());
 
-        strUrl = MyLogin.path+"/api/avatars/2";
+        //Blanc
+        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getBlanc().getAvatarId();
         new RequeteAvatar(holder.imgCombattant).execute(strUrl);
+        holder.txtCombattant.setText(combatItemList.get(position).getBlanc().getAlias());
 
-        strUrl = MyLogin.path+"/api/avatars/3";
+        //Arbitre
+        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getArbitre().getAvatarId();
         new RequeteAvatar(holder.imgAbritre).execute(strUrl);
-            /*
-            strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getCourriel();
-            new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
-            holder.txtCombattantAutre.setText(combatItemList.get(position).getRouge().getAlias());
+        holder.txtArbitre.setText(combatItemList.get(position).getArbitre().getAlias());
 
-
-            strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getBlanc().getCourriel();
-            new RequeteAvatar(holder.imgCombattant).execute(strUrl);
-            holder.txtCombattant.setText(combatItemList.get(position).getBlanc().getAlias());
-            */
-
-            /*
-            strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getArbitre().getCourriel();
-            new RequeteAvatar(holder.imgAbritre).execute(strUrl);
-            holder.txtArbitre.setText(combatItemList.get(position).getArbitre().getAlias());
-            */
+        //Credits
         holder.txtCredits.setText(context.getString(R.string.Credits, credits));
+    }
+    private static int pointsPourMatch(Combat combat, LobbyRole role) {
+        int pointsRouge;
+        int pointsBlanc;
+
+        if (combat.getPointsRouge() == 10 && combat.getPointsBlanc() == 10) {
+            pointsRouge = calculerPointsGagnant(combat.getCeintureRouge(), combat.getCeintureBlanc()) / 2;
+            pointsBlanc = calculerPointsGagnant(combat.getCeintureBlanc(), combat.getCeintureRouge()) / 2;
+        } else if (combat.getPointsRouge() == 5 && combat.getPointsBlanc() == 5) {
+            pointsRouge = calculerPointsGagnant(combat.getCeintureRouge(), combat.getCeintureBlanc()) / 2;
+            pointsBlanc = calculerPointsGagnant(combat.getCeintureBlanc(), combat.getCeintureRouge()) / 2;
+        } else if (combat.getPointsRouge() == 0 && combat.getPointsBlanc() == 0) {
+            pointsRouge = 0;
+            pointsBlanc = 0;
+        } else if (combat.getPointsRouge() == 10) {
+            pointsRouge = calculerPointsGagnant(combat.getCeintureRouge(), combat.getCeintureBlanc());
+            pointsBlanc = 0;
+        } else if (combat.getPointsBlanc() == 10) {
+            pointsRouge = 0;
+            pointsBlanc = calculerPointsGagnant(combat.getCeintureBlanc(), combat.getCeintureRouge());
+        } else {
+            throw new IllegalArgumentException("échec calcul points");
+        }
+
+        return role == LobbyRole.BLANC ? pointsBlanc : pointsRouge;
+    }
+    public static int calculerPointsGagnant(Groupe gagnant, Groupe perdant) {
+        int delta = perdant.getId() - gagnant.getId();
+        return recompensesSelonDelta.get(delta);
     }
 
     @Override
@@ -80,6 +142,7 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
     }
 
     public class CombatViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
         TextView txtDate;
         TextView txtPoints;
 
@@ -94,6 +157,8 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         TextView txtCredits;
         public CombatViewHolder(View view) {
             super(view);
+            cardView = view.findViewById(R.id.idCardView);
+
             txtDate=view.findViewById(R.id.date);
             txtPoints = view.findViewById(R.id.point);
 
