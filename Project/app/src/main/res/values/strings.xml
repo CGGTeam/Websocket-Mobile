@@ -60,5 +60,6 @@
     <string name="titre_historique_combat">Historique de combat</string>
     <string name="Points">Points : %1$s</string>
     <string name="Credits">Credits : %1$s</string>
+    <string name="titre_historique_examen">Historique d\'examen</string>
 
 </resources>

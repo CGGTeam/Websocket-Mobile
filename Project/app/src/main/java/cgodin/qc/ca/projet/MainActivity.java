@@ -1,7 +1,5 @@
 package cgodin.qc.ca.projet;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -163,9 +161,13 @@ public class MainActivity extends AppCompatActivity
                 ((MessagerieFragment)fragment).setStompClient(stompClient);
                 titre = R.string.messagerie;
                 break;
-            case R.id.nav_historique:
-                fragment = new HistoriqueFragment();
-                titre = R.string.titre_historique;
+            case R.id.nav_historique_combat:
+                fragment = new HistoriqueCombatFragment();
+                titre = R.string.titre_historique_combat;
+                break;
+            case R.id.nav_historique_examen:
+                fragment = new HistoriqueExamenFragment();
+                titre = R.string.titre_historique_examen;
                 break;
             default:
                 fragment = new AccueilFragment();

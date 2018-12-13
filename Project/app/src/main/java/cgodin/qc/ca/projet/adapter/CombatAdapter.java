@@ -32,7 +32,7 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
     static {
         recompensesSelonDelta = new HashMap<>();
 
-        recompensesSelonDelta.put(7, 1);
+        recompensesSelonDelta.put(7, 50);
         recompensesSelonDelta.put(6, 50);
         recompensesSelonDelta.put(5, 30);
         recompensesSelonDelta.put(4, 25);

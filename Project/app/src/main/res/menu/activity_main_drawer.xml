@@ -25,9 +25,14 @@
             android:icon="@drawable/ic_menu_messagerie"
             android:title="@string/messagerie" />
         <item
-            android:id="@+id/nav_historique"
+            android:id="@+id/nav_historique_combat"
             android:icon="@drawable/ic_menu_historique"
-            android:title="@string/titre_historique" />
+            android:title="@string/titre_historique_combat" />
+
+        <item
+            android:id="@+id/nav_historique_examen"
+            android:icon="@drawable/ic_menu_historique"
+            android:title="@string/titre_historique_examen" />
     </group>
 
 
