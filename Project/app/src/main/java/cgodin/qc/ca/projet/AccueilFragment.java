@@ -25,7 +25,7 @@ import cgodin.qc.ca.projet.models.SessionUtilisateur;
 
 
 public class AccueilFragment extends Fragment implements View.OnClickListener, RequeteListe.Handler<Compte> {
-    private static final String URL_COMPTES = "http://424v.cgodin.qc.ca:8082/api/comptes/defaults";
+    private static final String URL_COMPTES = "http://" + MainActivity.HOTE + "/api/comptes/defaults";
 
     View view;
     public AccueilFragment() {
