@@ -55,7 +55,7 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
                 credits += comb.getCreditsArbitre();
             }
         }
-        credits = getCreditsLostFromExam(examen, credits) +10 - removeCreditIfAncien(examen, examen.getEleve());
+        credits = getCreditsLostFromExam(examen, credits) +10 - removeCreditIfAncien(examen);
         return credits;
     }
     private int getPointsBeforeExamen(Examen examen, final int position){
@@ -95,9 +95,9 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
         }
         return credits;
     }
-    private int removeCreditIfAncien(Examen examen,SanitizedUser compte){
-        if(compte.getRole().getId()==2
-                && examen.getTemps() < compte.getAncienDepuis()){
+    private int removeCreditIfAncien(Examen examen){
+        if(examen.getEleve().getRole().getId()==2
+                && examen.getTemps() < examen.getEleve().getAncienDepuis()){
             return 10;
         }
         return 0;
