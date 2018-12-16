@@ -13,5 +13,5 @@ public enum TypeCommande {
     DECONNECTER,
     CONNECTER,
     MATCH_STATE,
-    COMBAT, ERREUR,
+    COMBAT, ERREUR, UPDATE_USER,
 }
