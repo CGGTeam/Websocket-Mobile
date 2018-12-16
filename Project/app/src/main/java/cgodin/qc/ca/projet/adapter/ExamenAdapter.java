@@ -27,6 +27,7 @@ import cgodin.qc.ca.projet.models.Combat;
 import cgodin.qc.ca.projet.models.Compte;
 import cgodin.qc.ca.projet.models.Examen;
 import cgodin.qc.ca.projet.models.Groupe;
+import cgodin.qc.ca.projet.models.SanitizedUser;
 import cgodin.qc.ca.projet.stomp.LobbyRole;
 
 import static cgodin.qc.ca.projet.MainActivity.HOTE;
@@ -54,7 +55,7 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
                 credits += comb.getCreditsArbitre();
             }
         }
-        credits = getCreditsLostFromExam(examen, credits) +10;
+        credits = getCreditsLostFromExam(examen, credits) +10 - removeCreditIfAncien(examen, examen.getEleve());
         return credits;
     }
     private int getPointsBeforeExamen(Examen examen, final int position){
@@ -93,6 +94,13 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
             }
         }
         return credits;
+    }
+    private int removeCreditIfAncien(Examen examen,SanitizedUser compte){
+        if(compte.getRole().getId()==2
+                && examen.getTemps() < compte.getAncienDepuis()){
+            return 10;
+        }
+        return 0;
     }
     private boolean estRouge(Combat c){
         String courriel = examenItemList.get(0).getEleve().getCourriel();
