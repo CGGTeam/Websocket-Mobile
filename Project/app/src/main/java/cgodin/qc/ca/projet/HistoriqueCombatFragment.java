@@ -77,5 +77,4 @@ public class HistoriqueCombatFragment extends Fragment implements View.OnClickLi
     public void echecRequete() {
         Toast.makeText(getContext(),"Erreur en recueillant la liste des combats", Toast.LENGTH_SHORT).show();
     }
-
 }

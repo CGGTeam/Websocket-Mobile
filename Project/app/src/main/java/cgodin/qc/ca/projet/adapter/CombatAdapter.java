@@ -49,6 +49,21 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         recompensesSelonDelta.put(-7, 1);
     }
 
+    private static Map<Integer, String> couleurSelonCeinture;
+    static {
+        couleurSelonCeinture = new HashMap<>();
+
+        couleurSelonCeinture.put(8, "#001a00");
+        couleurSelonCeinture.put(7, "#001a00");
+        couleurSelonCeinture.put(6, "#996633");
+        couleurSelonCeinture.put(5, "#0000ff");
+        couleurSelonCeinture.put(4, "#33cc33");
+        couleurSelonCeinture.put(3, "#ff9900");
+        couleurSelonCeinture.put(2, "#ffff4d");
+        couleurSelonCeinture.put(1, "#ffffff");
+
+    }
+
     public CombatAdapter(List<Combat> combatItemList, Context context) {
         this.combatItemList = combatItemList;
         this.context = context;
@@ -65,22 +80,23 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
     @Override
     public void onBindViewHolder(CombatViewHolder holder, final int position) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        //TODO : implémenter comme du monde
+
         String strUrl;
         Compte compteCourant = MyLogin.compteCourant;
 
         boolean estRouge = compteCourant.getCourriel().equals(combatItemList.get(position).getRouge().getCourriel());
+        boolean estBlanc = compteCourant.getCourriel().equals(combatItemList.get(position).getBlanc().getCourriel());
 
         String points = estRouge ? String.valueOf(combatItemList.get(position).getPointsRouge())
-                : String.valueOf(combatItemList.get(position).getPointsBlanc());
+                : estBlanc ? String.valueOf(combatItemList.get(position).getPointsBlanc()) : "5";
         String credits = String.valueOf(combatItemList.get(position).getCreditsArbitre());
 
-        if(Integer.parseInt(points) == 10 ) holder.cardView.setBackgroundColor(Color.parseColor("#ccffb3"));
-        else if(Integer.parseInt(points) == 0 ) holder.cardView.setBackgroundColor(Color.parseColor("#ffb3b3"));
-        else if(Integer.parseInt(points) == 5 ) holder.cardView.setBackgroundColor(Color.parseColor("#ffffb3"));
+        if(Integer.parseInt(points) == 10 ) holder.cardView.setCardBackgroundColor(Color.parseColor("#ccffb3"));
+        else if(Integer.parseInt(points) == 0 ) holder.cardView.setCardBackgroundColor(Color.parseColor("#ffb3b3"));
+        else if(Integer.parseInt(points) == 5 ) holder.cardView.setCardBackgroundColor(Color.parseColor("#ffffb3"));
 
         int intPoints =estRouge? pointsPourMatch(combatItemList.get(position), LobbyRole.ROUGE)
-                : pointsPourMatch(combatItemList.get(position), LobbyRole.BLANC);
+                : estBlanc ? pointsPourMatch(combatItemList.get(position), LobbyRole.BLANC) : 0;
 
         points = String.valueOf(intPoints);
 
@@ -92,11 +108,13 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getAvatarId();
         new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
         holder.txtCombattantAutre.setText(combatItemList.get(position).getRouge().getAlias());
+        holder.txtCombattantAutre.setTextColor(Color.parseColor(couleurSelonCeinture.get(combatItemList.get(position).getCeintureRouge().getId())));
 
         //Blanc
         strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getBlanc().getAvatarId();
         new RequeteAvatar(holder.imgCombattant).execute(strUrl);
         holder.txtCombattant.setText(combatItemList.get(position).getBlanc().getAlias());
+        holder.txtCombattant.setTextColor(Color.parseColor(couleurSelonCeinture.get(combatItemList.get(position).getCeintureBlanc().getId())));
 
         //Arbitre
         strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getArbitre().getAvatarId();
@@ -106,7 +124,7 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         //Credits
         holder.txtCredits.setText(context.getString(R.string.Credits, credits));
     }
-    private static int pointsPourMatch(Combat combat, LobbyRole role) {
+    public static int pointsPourMatch(Combat combat, LobbyRole role) {
         int pointsRouge;
         int pointsBlanc;
 

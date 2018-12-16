@@ -61,5 +61,6 @@
     <string name="Points">Points : %1$s</string>
     <string name="Credits">Credits : %1$s</string>
     <string name="titre_historique_examen">Historique d\'examen</string>
+    <string name="no_data_available">Ce compte n\'a passé aucun examen</string>
 
 </resources>
