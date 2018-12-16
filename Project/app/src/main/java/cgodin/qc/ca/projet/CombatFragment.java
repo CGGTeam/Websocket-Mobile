@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cgodin.qc.ca.projet.adapter.CompteAdapter;
@@ -26,10 +27,12 @@ import cgodin.qc.ca.projet.asynctasks.JsonUtils;
 import cgodin.qc.ca.projet.asynctasks.RequeteInfoCompte;
 import cgodin.qc.ca.projet.models.Attack;
 import cgodin.qc.ca.projet.models.Combat;
+import cgodin.qc.ca.projet.models.Compte;
 import cgodin.qc.ca.projet.models.SanitizedUser;
 import cgodin.qc.ca.projet.stomp.Commande;
 import cgodin.qc.ca.projet.stomp.DonneesReponseCommande;
 import cgodin.qc.ca.projet.stomp.LobbyRole;
+import cgodin.qc.ca.projet.stomp.LobbyUserData;
 import cgodin.qc.ca.projet.stomp.ReponseCommande;
 import cgodin.qc.ca.projet.stomp.SanitizedLobbyUser;
 import cgodin.qc.ca.projet.stomp.SerializableLobby;
@@ -68,6 +71,40 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
     private ImageView imvBlancChoisi;
     private ImageView imvRougeChoisi;
 
+    private RadioGroup.OnCheckedChangeListener groupListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int resId) {
+            RadioButton checkedRadioButton = group.findViewById(resId);
+            if (checkedRadioButton == null) return;
+            boolean isChecked = checkedRadioButton.isChecked();
+            if (isChecked) {
+                ((CheckBox)view.findViewById(R.id.cbArbitre)).setChecked(false);
+                envoyerChangement(trouverRole(resId));
+            }
+        }
+
+        private LobbyRole trouverRole(int resId) {
+            switch (resId) {
+                case R.id.radioButton4:
+                    //Ailleurs
+                    return LobbyRole.AILLEURS;
+                case R.id.radioButton5:
+                    //Spectateurs
+                    return LobbyRole.SPECTATEUR;
+                case R.id.radioButton6:
+                    //Combattants
+                    return LobbyRole.COMBATTANT;
+            }
+
+            throw new IllegalArgumentException();
+        }
+
+        private void envoyerChangement(LobbyRole nouveauRole) {
+            Commande commande = new Commande(TypeCommande.ROLE, nouveauRole.toString());
+            sendCommande(commande);
+        }
+    };
+
     public CombatFragment() {
         // Required empty public constructor
     }
@@ -94,11 +131,17 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
         txtDerniereCommande =  view.findViewById(R.id.txt_derniereCommande);
 
         rvAilleurs = view.findViewById(R.id.rcAilleurs);
+        rvAilleurs.setLayoutManager(new LinearLayoutManager(getContext()));
         rvArbitre = view.findViewById(R.id.rcArbitre);
+        rvArbitre.setLayoutManager(new LinearLayoutManager(getContext()));
         rvBlanc = view.findViewById(R.id.rcBlanc);
+        rvBlanc.setLayoutManager(new LinearLayoutManager(getContext()));
         rvRouge = view.findViewById(R.id.rcRouge);
+        rvRouge.setLayoutManager(new LinearLayoutManager(getContext()));
         rvCombattants = view.findViewById(R.id.rcCombattant);
+        rvCombattants.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSpectateurs = view.findViewById(R.id.rcSpectateur);
+        rvSpectateurs.setLayoutManager(new LinearLayoutManager(getContext()));
 
         view.findViewById(R.id.cbArbitre).setOnClickListener(this);
 
@@ -106,39 +149,7 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
 
         group = view.findViewById(R.id.radioGroup);
 
-        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int resId) {
-                RadioButton checkedRadioButton = group.findViewById(resId);
-                if (checkedRadioButton == null) return;
-                boolean isChecked = checkedRadioButton.isChecked();
-                if (isChecked) {
-                    ((CheckBox)view.findViewById(R.id.cbArbitre)).setChecked(false);
-                    envoyerChangement(trouverRole(resId));
-                }
-            }
-
-            private LobbyRole trouverRole(int resId) {
-                switch (resId) {
-                    case R.id.radioButton4:
-                        //Ailleurs
-                        return LobbyRole.AILLEURS;
-                    case R.id.radioButton5:
-                        //Spectateurs
-                        return LobbyRole.SPECTATEUR;
-                    case R.id.radioButton6:
-                        //Combattants
-                        return LobbyRole.COMBATTANT;
-                }
-
-                throw new IllegalArgumentException();
-            }
-
-            private void envoyerChangement(LobbyRole nouveauRole) {
-                Commande commande = new Commande(TypeCommande.ROLE, nouveauRole.toString());
-                sendCommande(commande);
-            }
-        });
+        group.setOnCheckedChangeListener(groupListener);
 
         subscriptions.add(client.topic(StompTopic.Subscribe.COMMANDE)
                 .subscribe(
@@ -190,10 +201,10 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
     private void afficherChoixArbitre(DonneesReponseCommande donneesReponseCommande) {
         LobbyRole choixArbitre = LobbyRole.valueOf(donneesReponseCommande.getParametres()[0].replace("\"", ""));
 
-        if (choixArbitre == LobbyRole.BLANC) {
+        if (choixArbitre == LobbyRole.ROUGE) {
             imvRougeChoisi.setVisibility(View.VISIBLE);
             imvRougeChoisi.setImageResource(R.drawable.flag_red);
-        } else if (choixArbitre == LobbyRole.ROUGE) {
+        } else if (choixArbitre == LobbyRole.BLANC) {
             imvBlancChoisi.setVisibility(View.VISIBLE);
             imvBlancChoisi.setImageResource(R.drawable.flag_red);
         } else {
@@ -263,6 +274,8 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
 
     private void initLobby(DonneesReponseCommande donneesReponseCommande) {
         try {
+            group.setOnCheckedChangeListener(null);
+
             if (donneesReponseCommande.getDe() != null && donneesReponseCommande.getDe().getCourriel().equals(MyLogin.compteCourant.getCourriel())) {
                 monCompte = donneesReponseCommande.getDe();
             }
@@ -274,14 +287,44 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
             initListe(rvArbitre, lobby.getArbitre());
             initListe(rvRouge, lobby.getRouge());
             initListe(rvBlanc, lobby.getBlanc());
+
+            CheckBox cbArbitre = view.findViewById(R.id.cbArbitre);
+
+            if (Arrays.stream(lobby.getAilleurs()).anyMatch(this::iAmUser)) {
+                group.check(R.id.radioButton4);
+                cbArbitre.setChecked(false);
+            } else if (Arrays.stream(lobby.getSpectateurs()).anyMatch(this::iAmUser)) {
+                group.check(R.id.radioButton5);
+                cbArbitre.setChecked(false);
+            } else if (Arrays.stream(lobby.getCombattants()).anyMatch(this::iAmUser)) {
+                group.check(R.id.radioButton6);
+                cbArbitre.setChecked(false);
+            } else if (iAmUser(lobby.getRouge())
+                || iAmUser(lobby.getBlanc())) {
+                group.clearCheck();
+                cbArbitre.setChecked(false);
+            } else if (iAmUser(lobby.getArbitre())){
+                cbArbitre.setChecked(true);
+            }
+
+            group.setOnCheckedChangeListener(groupListener);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private boolean iAmUser(LobbyUserData other) {
+        if (other == null || MyLogin.compteCourant == null) return false;
+        return MyLogin.compteCourant.getCourriel().equals(other.getCourriel());
+    }
+
     private void initListe(RecyclerView recyclerView, SanitizedUser... users) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new CompteAdapter(users));
+        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getClass() != CompteAdapter.class) {
+            recyclerView.setAdapter(new CompteAdapter(users));
+        } else {
+            CompteAdapter adapter = (CompteAdapter) recyclerView.getAdapter();
+            adapter.setItems(users);
+        }
     }
 
     @Nullable
@@ -325,60 +368,5 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                 sendCommande(commande);
                 break;
         }
-    }
-
-    /**
-     * Génère un combat où le combattant de la session courante est rouge et
-     * s1@dojo est blanc. Le rouge gagne. L’arbitre de ce
-     * combat est v1@dojo. Aucune faute n’est commise par l’arbitre. L’autorisation et la
-     * validation doivent se faire au niveau du serveur.
-     */
-    private void gagnerMatch(){
-        envoyerCombat("ROUGE");
-    }
-
-    /**
-     * Génère un combat où le combattant de la session courante est rouge et
-     * s1@dojo est blanc. Le blanc gagne. L’arbitre de ce
-     * combat est v1@dojo. Aucune faute n’est commise par l’arbitre. L’autorisation et la
-     * validation doivent se faire au niveau du serveur.
-     */
-    private void perdreMatch(){
-        envoyerCombat("BLANC");
-    }
-
-    /**
-     * Génère un combat où le combattant de la session courante est rouge et
-     * s1@dojo est blanc. C’est un match nul. L’arbitre de ce
-     * combat est v1@dojo. Aucune faute n’est commise par l’arbitre. L’autorisation et la
-     * validation doivent se faire au niveau du serveur.
-     */
-    private void annulerMatch(){
-        envoyerCombat("NUL");
-    }
-
-    /**
-     * Génère un combat où le combattant de la session courante est arbitre
-     * entre rouge v1@dojo et blanc s1@dojo. Le rouge gagne.
-     * Aucune faute n’est commise par l’arbitre. L’autorisation et la validation doivent se faire au
-     * niveau du serveur
-     */
-    private void arbitreSansFautes(){
-        envoyerCombat("ARBITRE");
-    }
-
-    /**
-     * Génère un combat où le combattant de la session courante est arbitre
-     * entre rouge v1@dojo et blanc s1@dojo. Le rouge gagne,
-     * cependant une faute est commise par l’arbitre. L’autorisation et la validation doivent se
-     * faire au niveau du serveur.
-     */
-    private void arbitreAvecFautes(){
-        envoyerCombat("FAUTE");
-    }
-
-    private void envoyerCombat(String resultat) {
-        Commande commande = new Commande(TypeCommande.COMBAT, resultat);
-        sendCommande(commande);
     }
 }

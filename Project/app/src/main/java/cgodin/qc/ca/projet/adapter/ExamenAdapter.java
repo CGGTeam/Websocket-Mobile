@@ -127,8 +127,7 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
         holder.txtPoints.setText(String.valueOf(points)+ " points");
 
         holder.txtProf.setText(examenItemList.get(position).getProfesseur().getAlias());
-        String strUrl = MyLogin.path+"/api/avatars/"+examenItemList.get(position).getProfesseur().getAvatarId();
-        new RequeteAvatar(holder.imgProf).execute(strUrl);
+        new RequeteAvatar(holder.imgProf).execute(examenItemList.get(position).getProfesseur().getAvatarId());
     }
 
     @Override

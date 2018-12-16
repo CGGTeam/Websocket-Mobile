@@ -105,20 +105,17 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         holder.txtPoints.setText(context.getString(R.string.Points, points));
 
         //Rouge
-        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getRouge().getAvatarId();
-        new RequeteAvatar(holder.imgCombattantAutre).execute(strUrl);
+        new RequeteAvatar(holder.imgCombattantAutre).execute(combatItemList.get(position).getRouge().getAvatarId());
         holder.txtCombattantAutre.setText(combatItemList.get(position).getRouge().getAlias());
         holder.txtCombattantAutre.setTextColor(Color.parseColor(couleurSelonCeinture.get(combatItemList.get(position).getCeintureRouge().getId())));
 
         //Blanc
-        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getBlanc().getAvatarId();
-        new RequeteAvatar(holder.imgCombattant).execute(strUrl);
+        new RequeteAvatar(holder.imgCombattant).execute(combatItemList.get(position).getBlanc().getAvatarId());
         holder.txtCombattant.setText(combatItemList.get(position).getBlanc().getAlias());
         holder.txtCombattant.setTextColor(Color.parseColor(couleurSelonCeinture.get(combatItemList.get(position).getCeintureBlanc().getId())));
 
         //Arbitre
-        strUrl = MyLogin.path+"/api/avatars/"+combatItemList.get(position).getArbitre().getAvatarId();
-        new RequeteAvatar(holder.imgAbritre).execute(strUrl);
+        new RequeteAvatar(holder.imgAbritre).execute(combatItemList.get(position).getArbitre().getAvatarId());
         holder.txtArbitre.setText(combatItemList.get(position).getArbitre().getAlias());
 
         //Credits
