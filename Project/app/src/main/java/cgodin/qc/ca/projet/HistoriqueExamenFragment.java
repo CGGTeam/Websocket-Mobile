@@ -10,15 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cgodin.qc.ca.projet.adapter.CombatAdapter;
 import cgodin.qc.ca.projet.adapter.ExamenAdapter;
 import cgodin.qc.ca.projet.asynctasks.RequeteListe;
 import cgodin.qc.ca.projet.asynctasks.RequeteListeExamens;
 import cgodin.qc.ca.projet.models.Combat;
-import cgodin.qc.ca.projet.models.Compte;
 import cgodin.qc.ca.projet.models.Examen;
 
 
@@ -67,6 +64,7 @@ public class HistoriqueExamenFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
     }
+
     @Override
     public void remplirListeExamens(List<Examen> lstExamens) {
 

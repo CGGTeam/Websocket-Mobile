@@ -1,6 +1,8 @@
 package cgodin.qc.ca.projet.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import cgodin.qc.ca.projet.MainActivity;
+import cgodin.qc.ca.projet.MyLogin;
 import cgodin.qc.ca.projet.R;
 import cgodin.qc.ca.projet.asynctasks.RequeteAvatar;
 import cgodin.qc.ca.projet.models.SanitizedUser;
@@ -21,7 +25,7 @@ public class CompteAdapter extends RecyclerView.Adapter<CompteAdapter.ViewHolder
     private Context context;
 
     public CompteAdapter(SanitizedUser[] comptes) {
-        this.comptes = Arrays.stream(comptes).filter(Objects::nonNull).toArray(SanitizedUser[]::new);
+        setItems(comptes);
     }
 
     @Override
@@ -36,14 +40,21 @@ public class CompteAdapter extends RecyclerView.Adapter<CompteAdapter.ViewHolder
     public void onBindViewHolder(CompteAdapter.ViewHolder holder, int position) {
         holder.setViewData(comptes[position]);
 
+        holder.setIsCurrentUser(comptes[position].getCourriel().equals(MyLogin.compteCourant.getCourriel()));
+
         if (comptes[position].getAvatarId() != null) {
-            new RequeteAvatar(holder.imAvatar).execute(MainActivity.REST_URL + "/api/avatars/" + comptes[position].getAvatarId());
+            new RequeteAvatar(holder.imAvatar).execute(comptes[position].getAvatarId());
         }
     }
 
     @Override
     public int getItemCount() {
         return comptes.length;
+    }
+
+    public void setItems(SanitizedUser[] users) {
+        this.comptes = Arrays.stream(users).filter(Objects::nonNull).toArray(SanitizedUser[]::new);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,6 +79,14 @@ public class CompteAdapter extends RecyclerView.Adapter<CompteAdapter.ViewHolder
             nom.setText(compte.getAlias());
             role.setText(compte.getRole().getRole().substring(0, 1));
             groupe.setText(compte.getGroupe().getGroupe().substring(0, 1));
+        }
+
+        public void setIsCurrentUser(boolean equals) {
+            if (equals) {
+                nom.setTextColor(ContextCompat.getColor(context, R.color.colorAccountHiglight));
+            } else {
+                nom.setTextColor(ContextCompat.getColor(context, R.color.black));
+            }
         }
     }
 }

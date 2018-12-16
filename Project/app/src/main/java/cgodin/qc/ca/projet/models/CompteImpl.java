@@ -18,6 +18,8 @@ public class CompteImpl implements Compte {
     private int chouchou;
     private int entrainement;
     private int talent;
+    private long ancienDepuis;
+
 
     @Override
     public String getCourriel() {
@@ -62,6 +64,11 @@ public class CompteImpl implements Compte {
     @Override
     public int getCredits() {
         return credits;
+    }
+
+    @Override
+    public long getAncienDepuis() {
+        return ancienDepuis;
     }
 
     public void setCourriel(String courriel) {
@@ -122,5 +129,9 @@ public class CompteImpl implements Compte {
 
     public void setTalent(int talent) {
         this.talent = talent;
+    }
+
+    public void setAncienDepuis(long ancienDepuis) {
+        this.ancienDepuis = ancienDepuis;
     }
 }

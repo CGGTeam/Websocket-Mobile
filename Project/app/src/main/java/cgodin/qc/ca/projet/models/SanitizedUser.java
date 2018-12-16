@@ -12,4 +12,5 @@ public interface SanitizedUser {
     void setAvatarId(Long id);
     Role getRole();
     Groupe getGroupe();
+    long getAncienDepuis();
 }

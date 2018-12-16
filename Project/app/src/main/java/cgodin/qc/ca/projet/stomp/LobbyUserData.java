@@ -15,6 +15,7 @@ public class LobbyUserData implements SanitizedLobbyUser {
     private int credits;
     private int points;
     private Compte compte;
+    private long ancienDepuis;
 
     @Override
     public LobbyRole getRoleCombat() {
@@ -54,5 +55,10 @@ public class LobbyUserData implements SanitizedLobbyUser {
     @Override
     public Groupe getGroupe() {
         return groupe;
+    }
+
+    @Override
+    public long getAncienDepuis() {
+        return ancienDepuis;
     }
 }
