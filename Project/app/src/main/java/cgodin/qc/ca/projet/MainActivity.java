@@ -29,8 +29,8 @@ import ua.naiksoftware.stomp.client.StompClient;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    //public static final String HOTE = "424v.cgodin.qc.ca:8086";
-    public static final String HOTE = "10.0.2.2:8082";
+    public static final String HOTE = "192.168.2.50:8082";
+    public static final String REST_URL = "http://" + HOTE;
     public static final String STOMP_URL = "ws://" + HOTE + "/webSocket/websocket"; // <= Pas une erreur
     private static final Stomp.ConnectionProvider PROVIDER = Stomp.ConnectionProvider.OKHTTP;
 
@@ -206,6 +206,7 @@ public class MainActivity extends AppCompatActivity
         myLogin.etablirConnexion(RequestQueue,email,"Patate123", this);
     }
     public void deconnexion(){
+        ((TextView)header.findViewById(R.id.txt_pointsCredits)).setText("");
         ((TextView)header.findViewById(R.id.txtEmail)).setText(R.string.email_Anonyme);
         ((TextView)header.findViewById(R.id.txtAlias)).setText(R.string.alias_Anonyme);
         ((TextView)header.findViewById(R.id.txtCeinture)).setText(R.string.ceinture_Anonyme);

@@ -95,5 +95,4 @@ public class HistoriqueExamenFragment extends Fragment implements View.OnClickLi
     public void echecRequete() {
         Toast.makeText(getContext(),"Erreur en recueillant la liste d'examens", Toast.LENGTH_SHORT).show();
     }
-
 }
