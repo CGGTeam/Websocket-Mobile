@@ -124,7 +124,7 @@ public class CombatAdapter extends RecyclerView.Adapter<CombatAdapter.CombatView
         //Credits
         holder.txtCredits.setText(context.getString(R.string.Credits, credits));
     }
-    private static int pointsPourMatch(Combat combat, LobbyRole role) {
+    public static int pointsPourMatch(Combat combat, LobbyRole role) {
         int pointsRouge;
         int pointsBlanc;
 

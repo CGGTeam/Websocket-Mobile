@@ -61,7 +61,8 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
         {
             if(estParticipant(comb)
                 && comb.getTemps() < examen.getTemps()){
-                points += estRouge(comb) ? comb.getPointsRouge() : comb.getPointsBlanc();
+                points += estRouge(comb) ? CombatAdapter.pointsPourMatch( comb, LobbyRole.ROUGE)
+                        : CombatAdapter.pointsPourMatch( comb, LobbyRole.BLANC) ;
             }
         }
         points = getPointsLostFromExam(examen, points)+100;
