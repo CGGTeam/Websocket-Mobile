@@ -4,10 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,11 +21,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cgodin.qc.ca.projet.adapter.CompteAdapter;
 import cgodin.qc.ca.projet.asynctasks.JsonUtils;
+import cgodin.qc.ca.projet.asynctasks.RequeteInfoCompte;
+import cgodin.qc.ca.projet.models.Attack;
+import cgodin.qc.ca.projet.models.Combat;
+import cgodin.qc.ca.projet.models.SanitizedUser;
 import cgodin.qc.ca.projet.stomp.Commande;
 import cgodin.qc.ca.projet.stomp.DonneesReponseCommande;
-import cgodin.qc.ca.projet.stomp.HearbeatLoop;
-import cgodin.qc.ca.projet.stomp.LobbyPosition;
 import cgodin.qc.ca.projet.stomp.LobbyRole;
 import cgodin.qc.ca.projet.stomp.ReponseCommande;
 import cgodin.qc.ca.projet.stomp.SanitizedLobbyUser;
@@ -37,17 +43,30 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
 
     View view;
     private StompClient client;
-    private TextView txtAilleurs;
-    private TextView txtSpectateurs;
-    private TextView txtCombattants;
-    private TextView txtArbitre;
     private RadioGroup group;
-    private HearbeatLoop hearbeatLoop;
     private TextView txtDerniereCommande;
     private MainActivity mainActivity;
     private SanitizedLobbyUser monCompte;
 
+    private RecyclerView rvArbitre;
+    private RecyclerView rvBlanc;
+    private RecyclerView rvRouge;
+    private RecyclerView rvAilleurs;
+    private RecyclerView rvSpectateurs;
+    private RecyclerView rvCombattants;
+
+    private CompteAdapter adArbitre;
+    private CompteAdapter adBlanc;
+    private CompteAdapter adRouge;
+    private CompteAdapter adAilleurs;
+    private CompteAdapter adSpectateurs;
+    private CompteAdapter adCombattants;
+
     private List<Disposable> subscriptions = new ArrayList<>();
+    private ImageView imvBlanc;
+    private ImageView imvRouge;
+    private ImageView imvBlancChoisi;
+    private ImageView imvRougeChoisi;
 
     public CombatFragment() {
         // Required empty public constructor
@@ -65,15 +84,21 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_combat,container, false);
         this.view = view;
 
+        imvBlanc = view.findViewById(R.id.imChoixGauche);
+        imvRouge = view.findViewById(R.id.imChoixDroite);
+        imvBlancChoisi = view.findViewById(R.id.imWinGauche);
+        imvRougeChoisi = view.findViewById(R.id.imWinDroite);
+
         mainActivity = (MainActivity) getContext();
 
+        txtDerniereCommande =  view.findViewById(R.id.txt_derniereCommande);
 
-        (view.findViewById(R.id.btnGagner)).setOnClickListener(this);
-        (view.findViewById(R.id.btnPerdre)).setOnClickListener(this);
-        (view.findViewById(R.id.btnNul)).setOnClickListener(this);
-
-        (view.findViewById(R.id.btnArbitre_sansFautes)).setOnClickListener(this);
-        (view.findViewById(R.id.btnAbritre_avecFaute)).setOnClickListener(this);
+        rvAilleurs = view.findViewById(R.id.rcAilleurs);
+        rvArbitre = view.findViewById(R.id.rcArbitre);
+        rvBlanc = view.findViewById(R.id.rcBlanc);
+        rvRouge = view.findViewById(R.id.rcRouge);
+        rvCombattants = view.findViewById(R.id.rcCombattant);
+        rvSpectateurs = view.findViewById(R.id.rcSpectateur);
 
         view.findViewById(R.id.cbArbitre).setOnClickListener(this);
 
@@ -115,18 +140,13 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        txtAilleurs = view.findViewById(R.id.lstAilleurs);
-        txtCombattants = view.findViewById(R.id.lstAttente);
-        txtSpectateurs = view.findViewById(R.id.lstSpectateur);
-        txtDerniereCommande = view.findViewById(R.id.txt_derniereCommande);
-        txtArbitre = view.findViewById(R.id.lstArbitre);
-
         subscriptions.add(client.topic(StompTopic.Subscribe.COMMANDE)
                 .subscribe(
                 stompMessage -> {
                     try {
                         ReponseCommande reponseCommande = JsonUtils.jsonToObject(stompMessage.getPayload(), ReponseCommande.class);
                         DonneesReponseCommande donneesReponseCommande = reponseCommande.getDonnees();
+                        if (donneesReponseCommande == null) return;
                         mainActivity.runOnUiThread(() -> txtDerniereCommande.setText("OK"));
 
                         switch (donneesReponseCommande.getTypeCommande()) {
@@ -142,6 +162,12 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                                     txtDerniereCommande.setText(reponseCommande.getTexte());
                                 });
                                 break;
+                            case SIGNALER:
+                                mainActivity.runOnUiThread(() ->afficherChoixArbitre(donneesReponseCommande));
+                                break;
+                            case ATTAQUER:
+                                mainActivity.runOnUiThread(() -> afficherAttaques(donneesReponseCommande));
+                                break;
                         }
 
                     } catch (IOException e) {
@@ -153,31 +179,71 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
         Commande commande = new Commande(TypeCommande.JOINDRE);
         try {
             client.send(StompTopic.Send.COMMANDE, JsonUtils.objectToJson(commande))
-                    .subscribe();
+                .subscribe();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        hearbeatLoop = new HearbeatLoop(client);
-        new Thread(hearbeatLoop).start();
-
         return view;
     }
 
+    private void afficherChoixArbitre(DonneesReponseCommande donneesReponseCommande) {
+        LobbyRole choixArbitre = LobbyRole.valueOf(donneesReponseCommande.getParametres()[0].replace("\"", ""));
+
+        if (choixArbitre == LobbyRole.BLANC) {
+            imvRougeChoisi.setVisibility(View.VISIBLE);
+            imvRougeChoisi.setImageResource(R.drawable.flag_red);
+        } else if (choixArbitre == LobbyRole.ROUGE) {
+            imvBlancChoisi.setVisibility(View.VISIBLE);
+            imvBlancChoisi.setImageResource(R.drawable.flag_red);
+        } else {
+            imvRougeChoisi.setVisibility(View.VISIBLE);
+            imvBlancChoisi.setVisibility(View.VISIBLE);
+            imvRougeChoisi.setImageResource(R.drawable.flag_red);
+            imvBlancChoisi.setImageResource(R.drawable.flag_red);
+        }
+    }
+
+    private void afficherAttaques(DonneesReponseCommande donneesReponseCommande) {
+        Attack attaqueRouge = Attack.valueOf(donneesReponseCommande.getParametres()[0].replace("\"", ""));
+        Attack attaqueBlanc = Attack.valueOf(donneesReponseCommande.getParametres()[1].replace("\"", ""));
+
+        imvBlanc.setVisibility(View.VISIBLE);
+        imvRouge.setVisibility(View.VISIBLE);
+
+        int idImageBlanc = getImagePourAttaque(attaqueBlanc);
+        int idImageRouge = getImagePourAttaque(attaqueRouge);
+
+        imvBlanc.setImageResource(idImageBlanc);
+        imvRouge.setImageResource(idImageRouge);
+    }
+
+    private int getImagePourAttaque(Attack attack) {
+        switch (attack) {
+            case CISEAUX:
+                return R.drawable.ciseaux;
+            case ROCHE:
+                return R.drawable.roche;
+            case PAPIER:
+                return R.drawable.papier;
+        }
+        return 0;
+    }
+
     private void updateUser(DonneesReponseCommande donneesReponseCommande) {
+        imvBlanc.setVisibility(View.GONE);
+        imvRouge.setVisibility(View.GONE);
+        imvBlancChoisi.setVisibility(View.GONE);
+        imvRougeChoisi.setVisibility(View.GONE);
         try {
-            if (MyLogin.compteCourant.getCourriel().equals(donneesReponseCommande.getDe().getCourriel())) {
-                String[] params = donneesReponseCommande.getParametres();
-                params[0] = params[0].replaceAll("\"", "");
-                params[1] = params[1].replaceAll("\"", "");
+            String myEmail = MyLogin.compteCourant.getCourriel();
+            Combat combat = JsonUtils.jsonToObject(donneesReponseCommande.getParametres()[0], Combat.class);
 
-                MyLogin.compteCourant.setPoints(Integer.parseInt(params[0].replace("\"", "")));
-                MyLogin.compteCourant.setCredits(Integer.parseInt(params[1].replace("\"", "")));
+            if (myEmail.equals(combat.getBlanc().getCourriel()) ||
+                    myEmail.equals(combat.getRouge().getCourriel()) ||
+                    myEmail.equals(combat.getArbitre().getCourriel())) {
 
-                mainActivity.points = params[0];
-                mainActivity.credits = params[1];
-
-                mainActivity.updateHeaderView();
+                new RequeteInfoCompte(mainActivity).execute(MainActivity.REST_URL + "/api/monCompte");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,83 +268,20 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
             }
 
             SerializableLobby lobby = JsonUtils.jsonToObject(donneesReponseCommande.getParametres()[0], SerializableLobby.class);
-            initListe(txtAilleurs, lobby.getAilleurs(), getResources().getString(R.string.list_Ailleurs));
-            initListe(txtCombattants, lobby.getCombattants(), getResources().getString(R.string.liste_Attente));
-            initListe(txtSpectateurs, lobby.getSpectateurs(), getResources().getString(R.string.liste_Spectateur));
-
-            if (lobby.getArbitre() == null) {
-                txtArbitre.setText("Aucun arbitre");
-            } else {
-                txtArbitre.setText("Arbitre: " + lobby.getArbitre().getAlias());
-            }
-
+            initListe(rvAilleurs, lobby.getAilleurs());
+            initListe(rvCombattants, lobby.getCombattants());
+            initListe(rvSpectateurs, lobby.getSpectateurs());
+            initListe(rvArbitre, lobby.getArbitre());
+            initListe(rvRouge, lobby.getRouge());
+            initListe(rvBlanc, lobby.getBlanc());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void initListe(TextView textView, SanitizedLobbyUser[] users, String textInitial) {
-        textView.setText(textInitial);
-        for (SanitizedLobbyUser user : users) {
-            if (user != null) {
-                textView.append(user.getAlias() + "\n");
-            }
-        }
-    }
-
-    private void UpdateListe(DonneesReponseCommande donnees) throws IOException {
-        String[] parametres = donnees.getParametres();
-
-        SanitizedLobbyUser de = donnees.getDe();
-        if (parametres.length > 1 && parametres[1] != null && parametres[1] != "null") {
-            LobbyPosition anciennePosition = JsonUtils.jsonToObject(parametres[1], LobbyPosition.class);
-            switch (anciennePosition.getRole()) {
-                case BLANC:
-                    break;
-                case ROUGE:
-                    break;
-                case ARBITRE:
-                    break;
-                case COMBATTANT:
-                    removeFromList(txtCombattants, de);
-                    break;
-                case SPECTATEUR:
-                    removeFromList(txtSpectateurs, de);
-                    break;
-                case AILLEURS:
-                    removeFromList(txtAilleurs, de);
-                    break;
-            }
-        }
-
-        LobbyPosition nouvellePosition = JsonUtils.jsonToObject(parametres[0], LobbyPosition.class);
-
-        switch (nouvellePosition.getRole()) {
-            case BLANC:
-                break;
-            case ROUGE:
-                break;
-            case ARBITRE:
-                break;
-            case COMBATTANT:
-                addToList(txtCombattants, de);
-                break;
-            case SPECTATEUR:
-                addToList(txtSpectateurs, de);
-                break;
-            case AILLEURS:
-                addToList(txtAilleurs, de);
-                break;
-        }
-    }
-
-    private void removeFromList(TextView list, SanitizedLobbyUser user) {
-        String nouvelleListe = ((String)list.getText()).replace(user.getAlias() + "\n", "");
-        list.setText(nouvelleListe);
-    }
-
-    private void addToList(TextView list, SanitizedLobbyUser user) {
-        list.append(user.getAlias() + "\n");
+    private void initListe(RecyclerView recyclerView, SanitizedUser... users) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new CompteAdapter(users));
     }
 
     @Nullable
@@ -311,31 +314,15 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
         for (Disposable subscription : subscriptions) {
             subscription.dispose();
         }
-        hearbeatLoop.interrupt();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnGagner :
-                gagnerMatch();
-                break;
-            case R.id.btnPerdre :
-                perdreMatch();
-                break;
-            case R.id.btnNul :
-                annulerMatch();
-                break;
             case R.id.cbArbitre:
                 ((RadioGroup)view.findViewById(R.id.radioGroup)).clearCheck();
                 Commande commande = new Commande(TypeCommande.ROLE, LobbyRole.ARBITRE.toString());
                 sendCommande(commande);
-                break;
-            case R.id.btnArbitre_sansFautes :
-                arbitreSansFautes();
-                break;
-            case R.id.btnAbritre_avecFaute :
-                arbitreAvecFautes();
                 break;
         }
     }
@@ -389,7 +376,6 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
     private void arbitreAvecFautes(){
         envoyerCombat("FAUTE");
     }
-
 
     private void envoyerCombat(String resultat) {
         Commande commande = new Commande(TypeCommande.COMBAT, resultat);
