@@ -42,8 +42,11 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
         this.context = context;
         this.lstCombats = lstCombats;
     }
-    private int getCreditBeforeExamen(Examen examen){
+    private int getCreditBeforeExamen(Examen examen, final int position){
         int credits = 0;
+        if(position==getItemCount()-1)
+            return credits;
+
         for (Combat comb : lstCombats)
         {
             if(examen.getEleve().getCourriel().equals(comb.getArbitre().getCourriel())
@@ -54,19 +57,33 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
         credits = getCreditsLostFromExam(examen, credits) +10;
         return credits;
     }
-    private int getPointsBeforeExamen(Examen examen){
-        Date date = new Date(examen.getTemps());
+    private int getPointsBeforeExamen(Examen examen, final int position){
         int points = 0;
+        if(position==getItemCount()-1 )
+            return points;
+
+        Examen lastExam = getLastExamenReussi(examen);
         for (Combat comb : lstCombats)
         {
             if(estParticipant(comb)
-                && comb.getTemps() < examen.getTemps()){
-                points += estRouge(comb) ? CombatAdapter.pointsPourMatch( comb, LobbyRole.ROUGE)
-                        : CombatAdapter.pointsPourMatch( comb, LobbyRole.BLANC) ;
+                && comb.getTemps() < examen.getTemps()
+                    &&  comb.getTemps() > lastExam.getTemps()){
+                points += estRouge(comb) ? CombatAdapter.pointsPourRouge(comb)
+                        : CombatAdapter.pointsPourBlanc(comb) ;
             }
         }
-        points = getPointsLostFromExam(examen, points)+100;
         return points;
+    }
+    private Examen getLastExamenReussi(Examen examen){
+        Examen lastExam = examen;
+        for(int i = 0;i<=getItemCount()-1;i++){
+            if(examenItemList.get(i).getTemps() < examen.getTemps()
+                    && examenItemList.get(i).isReussi()){
+                lastExam = examenItemList.get(i);
+                break;
+            }
+        }
+        return lastExam;
     }
     private int getCreditsLostFromExam(Examen examen, int credits){
         for (Examen exam: examenItemList)
@@ -76,15 +93,6 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
             }
         }
         return credits;
-    }
-    private int getPointsLostFromExam(Examen examen, int points){
-        for (Examen exam: examenItemList)
-        {
-            if(exam.getTemps() < examen.getTemps()){
-                points -= exam.isReussi() ? 100 : 0;
-            }
-        }
-        return points;
     }
     private boolean estRouge(Combat c){
         String courriel = examenItemList.get(0).getEleve().getCourriel();
@@ -109,8 +117,8 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
     public void onBindViewHolder(CombatViewHolder holder, final int position) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date(examenItemList.get(position).getTemps());
-        int credit = getCreditBeforeExamen(examenItemList.get(position));
-        int points = getPointsBeforeExamen(examenItemList.get(position));
+        int credit = getCreditBeforeExamen(examenItemList.get(position), position);
+        int points = getPointsBeforeExamen(examenItemList.get(position), position);
 
         holder.cardView.setCardBackgroundColor(examenItemList.get(position).isReussi()? Color.parseColor("#ccffb3"):Color.parseColor("#ffb3b3"));
 
