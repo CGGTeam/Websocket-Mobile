@@ -37,6 +37,7 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
     private List<Examen> examenItemList;
     private Context context;
     private List<Combat> lstCombats;
+    private boolean estAncien = false;
 
     public ExamenAdapter(List<Examen> combatItemList, Context context, List<Combat> lstCombats) {
         this.examenItemList = combatItemList;
@@ -97,7 +98,9 @@ public class ExamenAdapter extends RecyclerView.Adapter<ExamenAdapter.CombatView
     }
     private int removeCreditIfAncien(Examen examen){
         if(examen.getEleve().getRole().getId()==2
-                && examen.getTemps() < examen.getEleve().getAncienDepuis()){
+                && examen.getTemps() < examen.getEleve().getAncienDepuis()
+                && !estAncien){
+            estAncien = true;
             return 10;
         }
         return 0;
