@@ -179,6 +179,9 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
                             case ATTAQUER:
                                 mainActivity.runOnUiThread(() -> afficherAttaques(donneesReponseCommande));
                                 break;
+                            case UPDATE_USER:
+                                mainActivity.runOnUiThread(() -> updateSelf(donneesReponseCommande));
+                                break;
                         }
 
                     } catch (IOException e) {
@@ -196,6 +199,18 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
         }
 
         return view;
+    }
+
+    private void updateSelf(DonneesReponseCommande donneesReponseCommande) {
+        try {
+            SanitizedUser user = JsonUtils.jsonToObject(donneesReponseCommande.getParametres()[0], SanitizedUser.class);
+            if (user.getCourriel().equals(MyLogin.compteCourant.getCourriel())) {
+                new RequeteInfoCompte(mainActivity).execute(MainActivity.REST_URL + "/api/monCompte");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void afficherChoixArbitre(DonneesReponseCommande donneesReponseCommande) {
