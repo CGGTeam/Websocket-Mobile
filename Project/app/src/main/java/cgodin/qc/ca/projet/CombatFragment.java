@@ -58,13 +58,6 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
     private RecyclerView rvSpectateurs;
     private RecyclerView rvCombattants;
 
-    private CompteAdapter adArbitre;
-    private CompteAdapter adBlanc;
-    private CompteAdapter adRouge;
-    private CompteAdapter adAilleurs;
-    private CompteAdapter adSpectateurs;
-    private CompteAdapter adCombattants;
-
     private List<Disposable> subscriptions = new ArrayList<>();
     private ImageView imvBlanc;
     private ImageView imvRouge;
@@ -207,10 +200,29 @@ public class CombatFragment extends Fragment implements View.OnClickListener {
             if (user.getCourriel().equals(MyLogin.compteCourant.getCourriel())) {
                 new RequeteInfoCompte(mainActivity).execute(MainActivity.REST_URL + "/api/monCompte");
             }
+
+            findAndUpdateInRecycler(rvBlanc, user);
+            findAndUpdateInRecycler(rvRouge, user);
+            findAndUpdateInRecycler(rvAilleurs, user);
+            findAndUpdateInRecycler(rvArbitre, user);
+            findAndUpdateInRecycler(rvCombattants, user);
+            findAndUpdateInRecycler(rvSpectateurs, user);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void findAndUpdateInRecycler(RecyclerView recyclerView, SanitizedUser user) {
+        CompteAdapter adapter = (CompteAdapter) recyclerView.getAdapter();
+        SanitizedUser[] items = adapter.getItems();
+
+        for (int i = 0; i < items.length; i++) {
+            if (items[i].getCourriel().equals(user.getCourriel())) {
+                items[i] = user;
+                adapter.notifyItemChanged(i);
+            }
+        }
     }
 
     private void afficherChoixArbitre(DonneesReponseCommande donneesReponseCommande) {

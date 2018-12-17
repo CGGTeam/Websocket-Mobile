@@ -57,6 +57,10 @@ public class CompteAdapter extends RecyclerView.Adapter<CompteAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public SanitizedUser[] getItems() {
+        return this.comptes;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imAvatar;
 
